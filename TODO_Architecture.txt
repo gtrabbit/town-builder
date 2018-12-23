@@ -1,0 +1,43 @@
+    ============== Present Tasks =============
+
+TODO: 
+
+    
+    Click listener on the map layer to close the infoWindow if it is open
+    buildings can only be placed on certain terrain types
+
+
+
+    Tech tree
+        --buildings required to unlock upgrades
+        --buildings will need a concept of requirements for being built --done, maybe with a refactor to use a config object rather than a callback?
+        --non-linear tech-tree for citizen upgrades
+            --side effect is that this will push for incorporating even more territory
+
+    Incorporate art assets
+
+
+
+    =========== Ideas / Future ==========
+
+
+Need to move on toward enabling the upgrading of citizens
+
+daily/random events
+
+hint/advice feature on announcements page
+
+Consider migrating to an actual build system (webpack/babel w/ Grunt?) -- thus, an npm background, which will need to come eventually anyway if we're going to have persistence
+    AMD To ES5/6 npm plugin would be very helpful.
+
+Build UI components --- I suppose I should wait on Barry before I bother with that, though? yes. everything can look like crap for now.
+                        but down the road, I should definitely abstract UI into reusable/atomic classes
+
+
+    ============= Saving ============
+
+-- want to minimize the amount of data needed to regenerate the exact game state.
+-- need not pass any logic
+
+-- if we want to consider saving a possibility, then we will need the game object to be able to track which events have triggered / how many times.
+--Wire up with firebase or using cookies?
