@@ -1,0 +1,20 @@
+{"frames": {
+
+"Overworld_Tileset.png":
+{
+	"frame": {"x":0,"y":0,"w":640,"h":608},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":608},
+	"sourceSize": {"w":640,"h":608}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "overworld-tiles.png",
+	"format": "RGBA8888",
+	"size": {"w":640,"h":608},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:332337e831b91d8edfd2196b47b8bbf7:f802e964e5e4d661229b9ea546dac540:4b34905f57284784150eaa83724102b3$"
+}
+}
