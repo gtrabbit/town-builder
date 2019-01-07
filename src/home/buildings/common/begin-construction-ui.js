@@ -1,4 +1,4 @@
-import fromCamelCase from 'utils/fromCamelCase';
+import fromCamelCase from '../../../common/utils/from-camel-case';
     export default function(tile, buildings){
         let buildingCosts = buildings.reduce((result, b) => {
             result[b.getTypeName()] = b.getCosts(0);

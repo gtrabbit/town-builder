@@ -1,5 +1,5 @@
-import houseUI from 'ui/home/buildings/houseUI';
-import Building from 'home/buildings/buildingBase';
+import houseUI from './house-ui';
+import Building from '../building-base';
 
     const typeName = 'house';
 

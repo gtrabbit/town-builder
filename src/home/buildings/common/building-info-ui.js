@@ -1,4 +1,4 @@
-import fromCamelCase from 'utils/fromCamelCase';
+import fromCamelCase from '../../../common/utils/from-camel-case';
     export default function(building){
         
         return {

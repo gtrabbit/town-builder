@@ -1,10 +1,10 @@
-import Grid from 'core/Grid';
-import EventResults from 'ui/events/eventresults';
-import Message from 'events/message';
-import MapUI from 'ui/map/Map';
-import InfoWindow from 'ui/infowindow/infowindow';
-import makeTextBox from 'ui/infowindow/maketextbox';
-import SetupEventsBox from 'ui/events/setupeventsbox';
+import Grid from '../map/grid';
+import EventResults from '../common/event-results';
+import Message from '../common/message';
+import MapUI from '../map/map-ui';
+import InfoWindow from '../common/info-window/info-window';
+import makeTextBox from '../common/info-window/textbox';
+import SetupEventsBox from '../campaign/campaign-log-ui';
 	
 
 	export default class Game{
@@ -26,7 +26,7 @@ import SetupEventsBox from 'ui/events/setupeventsbox';
 				padding: 10
 			};  //just for now. something better later for sure
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
-			this.squareSize = 80; //looks like we're stuck at this number for now 
+			this.squareSize = 32; //looks like we're stuck at this number for now 
 
 			//=========Display Layers=============//
 			this.overlays = new PIXI.Container();
@@ -105,7 +105,7 @@ import SetupEventsBox from 'ui/events/setupeventsbox';
 			this.map.addChild(this.tileLayer, this.buildingLayer, this.floatLayer, this.infoWindowLayer);
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
-					let tileUI = this.grid.rows[rowNumber][colNum].makeUI();
+					let tileUI = this.grid.getTile(rowNumber, colNum).makeUI();
 					this.tileLayer.addChildAt(tileUI, 0);
 				}
 			}

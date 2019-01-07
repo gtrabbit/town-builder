@@ -1,8 +1,8 @@
-import Farm from './farm';
-import House from './house';
-import Market from './market';
-import Tower from './tower';
-import Cabin from './cabin';
+import Farm from './farm/farm';
+import House from './house/house';
+import Market from './market/market';
+import Tower from './tower/tower';
+import Cabin from './cabin/cabin';
     const classList = [Farm, House, Market, Tower, Cabin];
     
     export default {

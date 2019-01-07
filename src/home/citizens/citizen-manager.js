@@ -1,10 +1,10 @@
-import Artisan from 'home/citizens/artisan';
-import Commoner from 'home/citizens/commoner';
-import Farmer from 'home/citizens/farmer';
-import Militia from 'home/citizens/militia';
-import Woodsman from 'home/citizens/woodsman';
-import cloneObject from 'utils/cloneObject';
-import sumObjects from 'utils/sumObjects';
+import Artisan from './artisan/artisan';
+import Commoner from './commoner/commoner';
+import Farmer from './farmer/farmer';
+import Militia from './militia/militia';
+import Woodsman from './woodsman/woodsman';
+import cloneObject from '../../common/utils/clone-object';
+import sumObjects from '../../common/utils/sum-objects';
     export default class PopulationManager {
         constructor(home, startingPopulation){
             this.home = home;

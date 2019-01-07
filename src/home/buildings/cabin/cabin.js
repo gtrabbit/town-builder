@@ -1,5 +1,5 @@
-import cabinUI from 'ui/home/buildings/cabinUI';
-import Building from 'home/buildings/buildingBase';
+import cabinUI from './cabin-ui';
+import Building from '../building-base';
 
     const typeName = 'cabin';
     

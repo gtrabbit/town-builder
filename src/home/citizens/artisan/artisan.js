@@ -1,5 +1,5 @@
-import Market from 'home/buildings/market';
-import Citizen from 'home/citizens/citizen';
+import Market from '../../buildings/market/market';
+import Citizen from '../citizen';
     export default class Artisan extends Citizen {
         constructor(level){
             super(level, 'artisans');            

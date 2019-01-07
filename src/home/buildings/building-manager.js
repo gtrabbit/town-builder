@@ -1,7 +1,7 @@
-import GreatHall from 'home/buildings/greatHall';
-import cloneObject from 'utils/cloneObject';
-import basicBuildings from 'home/buildings/basic-buildings';
-import invertSign from 'utils/invertSign';
+import GreatHall from './great-hall/great-hall';
+import cloneObject from '../../common/utils/clone-object';
+import basicBuildings from './basic-buildings';
+import invertSign from '../../common/utils/invert-sign';
 
     const {farm: Farm, house: House, market: Market, tower: Tower, cabin: Cabin} = basicBuildings.classes;
 

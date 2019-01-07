@@ -1,5 +1,5 @@
-import marketUI from 'ui/home/buildings/marketUI';
-import Building from 'home/buildings/buildingBase';
+import marketUI from './market-ui';
+import Building from '../building-base';
 
     const typeName = 'market';
 

@@ -2,11 +2,30 @@
   "name": "game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack-dev-server --open"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "game",
+    "pixi",
+    "html5",
+    "canvas"
+  ],
+  "author": "Chris Rune",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^2.0.2",
+    "file-loader": "^3.0.1",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.28.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.13"
+  },
+  "dependencies": {
+    "pixi.js": "^4.8.4"
+  }
 }

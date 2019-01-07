@@ -1,4 +1,5 @@
-import Timer from 'events/Timer';
+import Timer from './timer';
+
     export default class Message{
         constructor(title, contents){
             this.title = title;

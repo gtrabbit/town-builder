@@ -1,5 +1,5 @@
-import Tower from 'home/buildings/tower';
-import Citizen from 'home/citizens/citizen';
+import Tower from '../../buildings/tower/tower';
+import Citizen from '../citizen';
     export default class Militia extends Citizen {
         constructor(level){
             super(level, 'militia');

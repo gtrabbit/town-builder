@@ -1,5 +1,5 @@
-import makeEventIndicator from 'ui/events/eventIndicator';
-import Timer from 'events/Timer';
+import makeEventIndicator from '../../common/event-indicator';
+import Timer from '../../common/timer';
 	export default class Expedition {
 		constructor(tile){
 			this.type = 'expedition';

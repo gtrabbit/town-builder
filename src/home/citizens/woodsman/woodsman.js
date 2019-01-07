@@ -1,5 +1,5 @@
-import Cabin from 'home/buildings/cabin';
-import Citizen from 'home/citizens/citizen';
+import Cabin from '../../buildings/cabin/cabin';
+import Citizen from '../citizen';
     export default class Woodsman extends Citizen {
         constructor(level){
             super(level, 'woodsmen');

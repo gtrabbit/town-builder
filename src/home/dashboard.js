@@ -1,4 +1,4 @@
-import toCamelCase from 'utils/toCamelCase';
+import toCamelCase from '../common/utils/to-camel-case';
     export default function(){
     
         const style = new PIXI.TextStyle({

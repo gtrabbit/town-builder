@@ -1,6 +1,6 @@
-import GreatHallUI from 'ui/home/buildings/greatHallUI';
-import Building from 'home/buildings/buildingBase';
-import PurchaseUnavailable from 'ui/events/messages/purchase-unavailable';
+import GreatHallUI from './great-hall-ui';
+import Building from '../building-base';
+import PurchaseUnavailable from '../../common/purchase-unavailable';
 
         const typeName = 'greatHall';
 

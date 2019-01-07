@@ -1,5 +1,5 @@
-import expeditionIndicator from 'ui/events/indicators/expeditionIndicator';
-import constructionIndicator from 'ui/events/indicators/constructionIndicator';
+import expeditionIndicator from '../home/defense/expedition-indicator';
+import constructionIndicator from '../home/buildings/common/construction-indicator';
     export default function(type, tile){
         
         let indicator;

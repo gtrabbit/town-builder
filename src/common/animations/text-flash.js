@@ -1,4 +1,4 @@
-define([], () => {
+export default function() {
     return (color, target, ticks, ticker) => {
         
         let count = 0;
@@ -11,4 +11,4 @@ define([], () => {
         
         ticker.add()
     }
-})
+};

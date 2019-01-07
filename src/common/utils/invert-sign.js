@@ -1,4 +1,4 @@
-import cloneObject from './cloneObject';
+import cloneObject from './clone-object';
     export default function invertSign(input){
         let invert = cloneObject(input);
         for (let key in input) {

@@ -1,5 +1,5 @@
-import towerUI from 'ui/home/buildings/towerUI';
-import Building from 'home/buildings/buildingBase';
+import towerUI from './tower-ui';
+import Building from '../building-base';
 
     const typeName = 'tower';
 

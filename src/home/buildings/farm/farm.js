@@ -1,5 +1,5 @@
-import farmUI from 'ui/home/buildings/farmUI';
-import Building from 'home/buildings/buildingBase';
+import farmUI from './farm-ui';
+import Building from '../building-base';
 
     const typeName = 'farm';
     

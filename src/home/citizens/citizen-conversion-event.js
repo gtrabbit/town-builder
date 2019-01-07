@@ -1,5 +1,5 @@
-import Timer from 'events/Timer';
-import Message from 'events/message';
+import Timer from '../../common/timer';
+import Message from '../../common/message';
 
 
     export default function(startType, targetType, modifyPopulace, amount){

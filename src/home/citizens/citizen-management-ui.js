@@ -1,5 +1,3 @@
-
-
     export default function(screenWidth, screenHeight, upgradeCitizen, downgradeToCommoner){
 
         const style = new PIXI.TextStyle({

@@ -1,5 +1,5 @@
-import Message from 'events/message';
-import makeDashboard from 'ui/home/homedashboard';
+import Message from '../common/message';
+import makeDashboard from './dashboard';
 	export default function(){
 
 		const display = makeDashboard();

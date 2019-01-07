@@ -1,5 +1,5 @@
-import Farm from 'home/buildings/farm';
-import Citizen from 'home/citizens/citizen';
+import Farm from '../../buildings/farm/farm';
+import Citizen from '../citizen';
     export default class Farmer extends Citizen {
         constructor(level){
             super(level, 'farmers');
