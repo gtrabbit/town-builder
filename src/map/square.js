@@ -2,19 +2,24 @@ import makeTileUI from './base-tile-ui';
 import Terrain from './terrain';
 
 	export default class Square {
-		constructor(x, y, grid, terrainType){
-				this.x = x;
-				this.y = y;
-				this.UID = "" + x + y;
-				this.grid = grid;
-				this.maxWidth = grid.width;
-				this.maxHeight = grid.height;
-				this.neighbors = this.setNeighbors(x, y);
-				this.isExplored = false;
-				this.squareSize = grid.squareSize;
-				this.fontStyle = grid.game.basicFontStyle;
-				this.terrain = this.setTerrain(terrainType, false);
+		constructor(x, y, grid, terrain){
+
+			this.x = x;
+			this.y = y;
+			this.UID = "" + x + y;
+			this.grid = grid;
+			this.maxWidth = grid.width;
+			this.maxHeight = grid.height;
+			this.neighbors = this.setNeighbors(x, y);
+			this.isExplored = false;
+			this.squareSize = grid.squareSize;
+			this.fontStyle = grid.game.basicFontStyle;
+			if (typeof terrain === 'string') {
+				this.setTerrain(terrain, false);
+			} else {
+				this.terrain = terrain;
 			}
+		}
 
 		getNeighbors(){
 			return this.neighbors;
@@ -41,11 +46,9 @@ import Terrain from './terrain';
 		}
 
 		makeUI(){			
-			const uiContainer = makeTileUI(this);
-			//ToDo: make a class to wrap this so I can give it custom methods (to handle multiple children, etc.)
-			this.ui = uiContainer.children[1]; //because this is really stupid
+			this.ui = makeTileUI(this);
 			this.setListener();
-			return uiContainer;
+			return this.ui;
 		}
 
 		setListener(){
@@ -53,15 +56,30 @@ import Terrain from './terrain';
 		}
 
 		setTerrain(terrainTypeName, setSubtype = true) {
-			let isChange = !!(this.terrain && this.terrain.spriteName);
-
+			//if no change, return.
+			if (this.terrain && terrainTypeName === this.terrain.typeName) return; 
+			//if the type is changing, and the sprite has already been set, then we
+			//need to re-evaluate each neighbor to see if it also needs changed.
+			let isReplacement = (this.terrain && this.terrain.spriteName);
 			this.terrain = new Terrain(this, terrainTypeName);
 			if (setSubtype) this.setTerrainSubtype();
-			if (isChange) {
+			if (isReplacement) {
 				this.getNeighborTiles().forEach(tile => {
-					tile && tile.setTerrainSubtype();
+					tile && tile.setSprite();
 				})
 			}
+		}
+
+		setSecondaryTerrainType(typeName) {
+			this.terrain.setSecondaryTerrainType(typeName);
+		}
+
+		setSecondaryTerrainSubtype(terrainSubtypeModel) {
+			this.terrain.setSecondaryTerrainSubtype(terrainSubtypeModel);
+		}
+
+		getSecondaryTerrainSpriteId() {
+			return this.terrain.getSecondaryTerrainSpriteId();
 		}
 
 		setSprite() {
@@ -70,7 +88,6 @@ import Terrain from './terrain';
 			} else {
 				this.terrain.setSprite();
 			}
-			
 		}
 
 		setTerrainSubtype() {
@@ -88,8 +105,8 @@ import Terrain from './terrain';
 
 		getSpritePosition(){
 			return {
-				x: this.ui.parent.x,
-				y: this.ui.parent.y
+				x: this.ui.x,
+				y: this.ui.y
 			}
 		}
 

@@ -1,12 +1,14 @@
 import Home from '../home/home';
-import Terrain from './terrain-generator';
+import TerrainGenerator from './terrain-generator';
 import TileFactory from './tile-factory';
+import Terrain from './terrain';
 
 
 export default class Grid{
 	constructor(game, savedGrid){
 		this.height = game.state.height;
 		this.width = game.state.width;
+		this.homeStart = [~~(this.width / 2) - 1, ~~(this.height / 2) - 1];
 		this.growthRate = game.state.growthRate;
 		this.game = game;
 		this.squareSize = game.squareSize;
@@ -29,29 +31,6 @@ export default class Grid{
 		}
 	}
 
-	makeAField(){
-		let x = ~~(this.width / 2) - 1;
-		let y = ~~(this.height / 2) - 1;
-		let tile = this.getTile(x, y);
-		tile.setTerrain('field');
-		tile.getNeighbors().forEach(a=>{
-			let b = this.getTile(a[0], a[1])
-			b.setTerrain('field');
-			if (Math.random() > 0.2){
-				b.getNeighbors().forEach(a=>{
-					tile = this.getTile(a[0], a[1]);
-					tile.setTerrain('field');
-					if (Math.random() > 0.3){
-						tile.getNeighbors().forEach(a=>{
-							if (Math.random() > 0.6) this.getTile(a[0], a[1]).setTerrain('field');
-						});
-					}
-				})
-			}
-		})
-		return [x, y];
-	}
-
 	getTile(x, y){
 		return this.rows[x][y];
 	}
@@ -67,12 +46,11 @@ export default class Grid{
 		this.game.pleaseSortTiles = true;
 		const oldTile = this.rows[x].splice(y, 1, tile)[0];
 		if (oldTile.hasOwnProperty('ui')){
-			oldTile.ui.parent.destroy({children: true});
+			oldTile.ui.destroy();
 		}
 		tile.setTerrainSubtype();
 		tile.makeUI();
-		this.game.tileLayer.addChild(tile.ui.parent);
-
+		this.game.tileLayer.addChild(tile.ui.getContainer());
 		tile.render();			
 	}
 
@@ -93,8 +71,7 @@ export default class Grid{
 				col.push(square);
 			}	
 		}
-		Terrain.generateTerrain(this);
-		this.homeStart = this.makeAField();
+		TerrainGenerator.generateTerrain(this, this.homeStart);
 		this.home = new Home(this, this.game.startingResources, this.game.startingPopulation);			
 	}
 }

@@ -1,5 +1,6 @@
-import {assignTerrainSubtype} from './terrain-subtype-selector';
 import parseMountains from './mountain-processor';
+import parseFields from './field-processor';
+import {isCloseTo} from './map-utils';
 
 export default {
 	terrainTypes: [
@@ -9,9 +10,9 @@ export default {
 	],
 
 
-	generateTerrain(grid){
+	generateTerrain(grid, homeStartPosition){
 		let size = grid.height * grid.width;
-		grid = this.firstIteration(grid);
+		grid = this.firstIteration(grid, homeStartPosition);
 
 		for (let x = 0; x < 5; x++){
 			grid.rows.forEach((a,j)=>{
@@ -39,13 +40,14 @@ export default {
 				})
 			})
 		}
-		
+		this.smoothCorners(grid);
 		if (this.validateMap(grid, size)) {
 			this.processHills(grid);
+			this.varyFields(grid, homeStartPosition);
 			this.setAllTerrainSubtype(grid);
 		} else {
 			this.resetAll(grid);
-			this.generateTerrain(grid);
+			this.generateTerrain(grid, homeStartPosition);
 		}
 	},
 
@@ -53,18 +55,22 @@ export default {
 		parseMountains(grid);
 	},
 
+	varyFields(grid, homeStartPosition) {
+		parseFields(grid, homeStartPosition);
+	},
+
 	smoothCorners(grid) {
 		for (let j = 0; j < 3; j++) {
-			grid.forEach(row => {
+			grid.rows.forEach(row => {
 				row.forEach(tile => {
 					let neighbors = tile.getNeighbors();
 					let similarTiles = neighbors.reduce((a, b) => 
-						grid[b[0]][b[1]].terrain.typeName === tile.terrain.typeName 
+						grid.rows[b[0]][b[1]].terrain.typeName === tile.terrain.typeName 
 							? a + 1
 							: a + 0
 					, 0);
 					if (similarTiles < 4) {
-						tile.setTerrain('field');
+						tile.setTerrain('field', false);
 					}
 				});
 			});
@@ -107,17 +113,22 @@ export default {
 		tile.terrain.typeName = null;
 	},
 
-	firstIteration(grid){
+	firstIteration(grid, homeStartPosition){
 		grid.rows.forEach(row => {
 			row.forEach(tile => {
-				let roll = Math.random();
-				if (roll < 0.4){
-					tile.setTerrain('forest', false);
-				} else if (roll > 0.87) {
-					tile.setTerrain('hills', false);
-				} else {
+				if (isCloseTo([tile.x, tile.y], [homeStartPosition[0], homeStartPosition[1]], 5)) {
 					tile.setTerrain('field', false);
+				} else {
+					let roll = Math.random();
+					if (roll < 0.4){
+						tile.setTerrain('forest', false);
+					} else if (roll > 0.86) {
+						tile.setTerrain('hills', false);
+					} else {
+						tile.setTerrain('field', false);
+					}
 				}
+
 			})
 		});
 		return grid;

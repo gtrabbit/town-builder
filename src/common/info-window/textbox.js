@@ -1,12 +1,21 @@
+import {displaySettings} from '../../core/settings';
 
     export default function makeTextBox(message) {
-        let textBox = new PIXI.Graphics();
-        textBox.lineStyle(3, 0x397be5, 1);
-        let size = message.getBounds();
-        textBox.beginFill(0xFFFFFF);
-        textBox.drawRoundedRect(0, 0, size.width + 10, size.height + 20, 15);
-        textBox.endFill();
-        message.position.set(10, 5);
+
+        let container = new PIXI.Container();
+
+        let border = new PIXI.Graphics();
+        border.beginFill(0x999999, 1);
+        border.lineStyle(1, 0xDDDDDD, 1, 0);
+        border.drawRect(0, 0, displaySettings.displayWidth, 3);
+        border.endFill();
+
+
+        let textBox = PIXI.mySprites.parchment;
+        textBox.height = 128;
+        textBox.width = displaySettings.displayWidth;
+        
+        message.position.set(20, 15);
         textBox.interactive = true;
         textBox.on('click', stopClickEvents);
 
@@ -14,6 +23,6 @@
             event.stopPropagation();
             event.reset();
         }
-        textBox.addChild(message);
-        return textBox;
+        container.addChild(textBox, message, border);
+        return container;
     }

@@ -5,7 +5,6 @@ import MapUI from '../map/map-ui';
 import InfoWindow from '../common/info-window/info-window';
 import makeTextBox from '../common/info-window/textbox';
 import SetupEventsBox from '../campaign/campaign-log-ui';
-	
 
 	export default class Game{
 		constructor(state, screenWidth, screenHeight, stage, renderer, animationHook){
@@ -26,7 +25,7 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 				padding: 10
 			};  //just for now. something better later for sure
 			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
-			this.squareSize = 32; //looks like we're stuck at this number for now 
+			this.squareSize = 28; //basically arbitrary, but trying to find what looks good with current sprite resolution
 
 			//=========Display Layers=============//
 			this.overlays = new PIXI.Container();
@@ -61,7 +60,7 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 			//============Logic/Function============///
 			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
 			this.makeTextBox = makeTextBox;
-			this.infoWindow = InfoWindow(this.basicFontStyle, this.infoWindowLayer, this.animationHook);
+			this.infoWindow = InfoWindow(this.basicFontStyle, this.overlays, this.animationHook);
 
 			//================ Flags ==============//
 			this.pleaseSortTiles;
@@ -106,7 +105,7 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
 					let tileUI = this.grid.getTile(rowNumber, colNum).makeUI();
-					this.tileLayer.addChildAt(tileUI, 0);
+					this.tileLayer.addChildAt(tileUI.getContainer(), 0);
 				}
 			}
 			this.stageIsSet = true;

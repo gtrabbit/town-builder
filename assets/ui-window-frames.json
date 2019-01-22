@@ -1,0 +1,98 @@
+{"frames": {
+    "mainWindow": {
+        "frame": {
+            "x": 0,
+            "y": 0,
+            "h": 48,
+            "w": 48
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+        "sourceSize": {"w":48,"h":48},
+        "pivot": {"x":0.5,"y":0.5}
+    },
+    "lowerWindow": {
+        "frame": {
+            "x": 0,
+            "y": 48,
+            "h": 16,
+            "w": 48
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":48,"h":16},
+        "sourceSize": {"w":48,"h":16},
+        "pivot": {"x":0.5,"y":0.5}
+    },
+    "sideWindow": {
+        "frame": {
+            "x": 48,
+            "y": 0,
+            "h": 48,
+            "w": 16
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":16,"h":48},
+        "sourceSize": {"w":16,"h":48},
+        "pivot": {"x":0.5,"y":0.5}
+    },
+    "blockConvex": {
+        "frame": {
+            "x": 48,
+            "y": 48,
+            "h": 16,
+            "w": 16
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+        "sourceSize": {"w":16,"h":16},
+        "pivot": {"x":0.5,"y":0.5}
+    },
+    "blockConcave": {
+        "frame": {
+            "x": 64,
+            "y": 32,
+            "h": 16,
+            "w": 16
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+        "sourceSize": {"w":16,"h":16},
+        "pivot": {"x":0.5,"y":0.5}
+    },
+    "blockConcaveDark": {
+        "frame": {
+            "x": 64,
+            "y": 0,
+            "h": 16,
+            "w": 16
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+        "sourceSize": {"w":16,"h":16},
+        "pivot": {"x":0.5,"y":0.5}
+    },
+    "blockConvexDark": {
+        "frame": {
+            "x": 64,
+            "y": 16,
+            "h": 16,
+            "w": 16
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+        "sourceSize": {"w":16,"h":16},
+        "pivot": {"x":0.5,"y":0.5}
+    }
+},
+"meta": {
+    "scale": 1,
+    "size": {"w": 80, "h": 64},
+    "image": "_sheet_window_02.png"
+}}

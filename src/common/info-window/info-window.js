@@ -1,5 +1,6 @@
 import makeTextbox from './textbox';
 import makeCloser from './closer';
+import {displaySettings} from '../../core/settings';
 
     export default function makeInfoWindow(style, infowindowLayer, ticker){
 
@@ -66,9 +67,7 @@ import makeCloser from './closer';
                
 
             //place the infowindow in relation to the incoming tile
-                infoWindow.position.set(
-                    selectedTile.ui.parent.x + selectedTile.squareSize + 10,
-                    selectedTile.ui.parent.y);
+                infoWindow.position.set(0, displaySettings.displayHeight - 128);
             } else {
                 infoWindow.position.set(
                     //would need somehow to calculate the middle of the screen
@@ -89,18 +88,18 @@ import makeCloser from './closer';
 //some helper stuff
 
         function setListeners(selectedTile, dismissal){
+            selectedTile.ui.addOneTimeEventListener('click', infoWindow.close);
             infoWindow.on('added', highlightSelectedTile.bind(selectedTile));
             infoWindow.on('removed', unhighlightSelectedTile.bind(selectedTile));
             infoWindow.on('removed', dismissal.bind(selectedTile));
         }
 
         function highlightSelectedTile(){
-            this.ui.previousTint = this.ui.tint || 0xDDDDDD;
-            this.ui.tint = 0xFF99BB;
+            this.ui.highlight(0xFF99BB);
         }
 
         function unhighlightSelectedTile(){
-            this.ui.tint = this.ui.previousTint || 0xDDDDDD;
+            this.ui.removeHighlight();
             infoWindow.removeAllListeners();
         }
 

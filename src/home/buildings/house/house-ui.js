@@ -1,8 +1,11 @@
-
+import uiWrapper from '../../../common/tile-sprite-wrapper';
     export default function(tile, level){
         const spriteWrapper = new PIXI.Container();
-        const mapSprite = new PIXI.Text(`House(${level})`, {fontSize: '12pt'});
-        mapSprite.position.set(tile.squareSize / 5, tile.squareSize / 5);             
+        const mapTexture = PIXI.tileSheet.textures["sprite434"];
+        let mapSprite = new PIXI.Sprite(mapTexture);
+        mapSprite.width = Math.floor(tile.squareSize * 0.7);
+        mapSprite.height = Math.floor(tile.squareSize * 0.7);
         spriteWrapper.addChild(mapSprite);
-        return spriteWrapper;
+        const uiObject = new uiWrapper(spriteWrapper, mapSprite);
+        return uiObject;
     }

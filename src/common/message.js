@@ -9,6 +9,6 @@ import Timer from './timer';
         }
 
         resolve(){
-            return this
+            return this;
         }
     }

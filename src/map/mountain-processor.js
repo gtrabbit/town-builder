@@ -6,7 +6,7 @@ export default function parse(grid) {
     const bigRanges = [];
     const tooSmallGroups = [];
     ranges.forEach(range => {
-        if (range.size > 20) {
+        if (range.size > 35) {
             bigRanges.push(range);
         } else {
             tooSmallGroups.push(range);
@@ -16,8 +16,14 @@ export default function parse(grid) {
     processTooSmallGroups(tooSmallGroups);
     let normalizedRanges = normalizeBigRanges(bigRanges);        
     defineRidges(normalizedRanges);
-    //defineEdges(normalizedRanges);
 
+}
+
+function SortAndConvertToArray(range) {
+    let keys = Object.keys(range.tiles);
+    keys.sort((a, b) => a - b);
+    range.tiles = keys.map(key => range.tiles[key]);
+    return range;
 }
 
 function normalizeBigRanges(ranges) {
@@ -31,86 +37,134 @@ function normalizeBigRanges(ranges) {
             return acc;
         }, {});
 
-        for (let index in range.tiles) {
-            if (range.tiles.hasOwnProperty(index)) {
-                let row = range.tiles[index];
-                row.sort((a,b) => a.x - b.x);
-                let midPoint = row[Math.floor(row.length / 2)].x;
-                //keep ranges from getting too fat. The height is not visually believable, and can lead to goofy tile configurations
-                for (let index = 0; index < row.length; index++) {
-                    let tile = row[index];
-                    if (tile.x - 3 > midPoint || tile.x + 4 < midPoint) {
-                        tile.setTerrain('field', false);
-                        row.splice(index, 1);
-                        index--;
-                    }
-                }
+        range = SortAndConvertToArray(range);
+        range.tiles.forEach((row, index) => {
+            if (row.length < 2) {
+                row.forEach(tile => {
+                    tile.setTerrain('field', false);
+                });
+                range.tiles.splice(index, row.length);
+                return;
             }
-        }
+            row.sort((a,b) => a.x - b.x);
+            let midPoint = row[Math.floor(row.length / 2)].x;
+            //keep ranges from getting too fat. The height is not visually believable, and can lead to goofy tile configurations
+            for (let index = 0; index < row.length; index++) {
+                let tile = row[index];
+                if (tile.x - 3 > midPoint || tile.x + 4 < midPoint) {
+                    tile.setTerrain('field', false);
+                    row.splice(index, 1);
+                    index--;
+                }
+
+
+            }
+        });            
     });
     return ranges;
 }
 
-function defineEdges(ranges) {
+function defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, move) {
+    let couldAssignRidgeTile = false;
+    row.forEach(tile => {
+        let targetType = null;
+        if (tile.x === previousSpineIndex) {
+            couldAssignRidgeTile = true;
+            targetType = move === 0 && movedLeftLastTime
+                ? "ridge-forwardDiagonal"
+                : move < 0
+                    ? "ridge-forwardDiagonal"
+                    : move > 0
+                        ? "ridge-backwardDiagonal"
+                        : "ridge-vertical";
+        } else {
+            targetType = tile.x > previousSpineIndex
+            ? tile.x - 1 === previousSpineIndex && (move !== 0 || movedLeftLastTime) ? "ridge-eastSlope" : "eastSlope"
+            : tile.x + 1 === previousSpineIndex
+                ? "ridge-westSlope"
+                : "westSlope";
+        }
 
-    ranges.forEach(range => {
-        let tiles = range.tiles;
-
-    })
+        tile.setTerrainSubtypeName(targetType);
+    });
+    return couldAssignRidgeTile
 }
 
-//ToDo: do not set spriteNames directly, but instead set terrainTypes and let terrain class handle transformations
 function defineRidges(ranges) {
     ranges.forEach(range => {
         let previousSpineIndex = null;
         let movedLeftLastTime = null;
         let continuousStraightRidges = 0;
-        for (let groupIndex in range.tiles) {
-            if (range.tiles.hasOwnProperty(groupIndex)) {
-                let group = range.tiles[groupIndex];
-                let currentMidpoint = group[Math.floor(group.length / 2)].x;
-                let move = 0;
-                //if this is the first iteration, just start the spine in the middle
-                if (previousSpineIndex === null) {
-                    previousSpineIndex = currentMidpoint;
-                } 
-                //some randomness to break up long vertical changes, as suggested by guide
-                if (( Math.random() > 0.4 && continuousStraightRidges > 2 ) || (previousSpineIndex !== currentMidpoint && !movedLeftLastTime)) {
-                    continuousStraightRidges = 0;
-                    move = (previousSpineIndex <= currentMidpoint) 
-                        ? 1
-                        : -1;
-                }
-                if (move < 0) {
-                    previousSpineIndex--;
-                }
-
-                group.forEach(tile => {
-                    let targetType = null;
-                    if (tile.x === previousSpineIndex) {
-                        targetType = move === 0 && movedLeftLastTime
-                            ? "ridge-forwardDiagonal"
-                            : move < 0
-                                ? "ridge-forwardDiagonal"
-                                : move > 0 
-                                    ? "ridge-backwardDiagonal"
-                                    : "ridge-vertical";
-                        
-                    } else {
-                        targetType = tile.x > previousSpineIndex
-                        ? tile.x - 1 === previousSpineIndex && (move !== 0 || movedLeftLastTime) ? "ridge-eastSlope" : "eastSlope"
-                        : tile.x - 1 === previousSpineIndex
-                            ? "ridge-westSlope"
-                            : "westSlope";
-                    }
-                    tile.setTerrainSubtypeName(targetType);
-                });
-                previousSpineIndex += move;
-                movedLeftLastTime = move === -1;
-                continuousStraightRidges += move === 0 ? 1 : 0;
+        let targetIndex = range.tiles.length;
+        let inc = 1;
+        for (let i = 0; i !== targetIndex; i += inc) {
+            let row = range.tiles[i];
+            let currentMidpoint = row[Math.floor(row.length / 2)].x;
+            let move = 0;
+            //if this is the first iteration, just start the spine in the middle
+            if (previousSpineIndex === null) {
+                previousSpineIndex = currentMidpoint;
+            } 
+            //some randomness to break up long vertical ranges, as suggested by guide
+            if (( Math.random() > 0.4 && continuousStraightRidges > 2 ) || (previousSpineIndex !== currentMidpoint && !movedLeftLastTime)) {
+                continuousStraightRidges = 0;
+                move = (previousSpineIndex <= currentMidpoint) 
+                    ? 1
+                    : -1;
             }
+            if (move < 0) {
+                previousSpineIndex--;
+            }
+            let couldAssignRidgeTile = defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, move);
+            let hasBorderOnBottom = range.tiles.length - 1 === i || !couldAssignRidgeTile;
+            if (hasBorderOnBottom) {
+                removeIncongruousTiles(row);
+            }
+            // if (!couldAssignRidgeTile) {
+            //     handleDiscontinuousRidges(range, i);
+            //     break;
+            // }
+
+
+            //updates for next iteration
+            previousSpineIndex += move;
+            movedLeftLastTime = move === -1;
+            continuousStraightRidges += move === 0 ? 1 : 0;
+        
         }
+
     });
+}
+
+function removeIncongruousTiles(row) {
+    let lastRidgeTileIndex = row.findIndex(tile => tile.terrain.subtypeName.indexOf('Diagonal') >= 0);
+    if (lastRidgeTileIndex === -1) {
+        return;
+    }
+    let tilesThatDontWork = [];
+    if (row[lastRidgeTileIndex].terrain.subtypeName.indexOf("forward") >= 0) {
+        tilesThatDontWork = row.slice(0, lastRidgeTileIndex + 1);
+        row.splice(0, lastRidgeTileIndex);    
+    } else {
+        tilesThatDontWork = row.slice(lastRidgeTileIndex + 1);
+        row.splice(lastRidgeTileIndex, row.length);
+    }
+    tilesThatDontWork.forEach(tile => {
+        tile.setTerrain('field', false);
+    });
+
+}
+
+function handleDiscontinuousRidges(range, failedIndex) {
+    let bottomRowIndex = range.tiles.length - 1;
+    for (let i = bottomRowIndex; i > failedIndex; i--) {
+        let currentRow = range.tiles[i];
+        currentRow.forEach((tile, index) => {
+            tile.setTerrain('field', false);
+            tile.setTerrainSubtypeName('heath');
+            range.tiles[i].splice(index, 1);
+        });
+    }
 }
 
 function splitMountainRanges(grid) {

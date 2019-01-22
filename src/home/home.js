@@ -44,10 +44,10 @@ import DefenseManager from './defense/defense-manager';
 		setInitialTerritory(homeStart, homeEnd){
 			for (let x = homeStart[0]; x <= homeEnd[0]; x++) {
 				for (let y = homeStart[1]; y <= homeEnd[1]; y++) {
-					let starter = TileFactory(  //tileFactory needs to accept the Terrain class instead of a string?
-						'civic', x, y, this.grid, this.grid.rows[x][y].terrain.typeName, null, true);
+					let starter = TileFactory( 
+						'civic', x, y, this.grid, this.grid.rows[x][y].terrain, null, true);
 					this.grid.replaceTile(x, y, starter)
-					this.territory.push(starter); //any call subsequent to this should use public method
+					this.territory.push(starter); //any call subsequent to this should use public method--not doing so here, because we don't want to call render() yet
 				}
 			}
 		}

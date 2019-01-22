@@ -65,8 +65,7 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 		}
 
 		setListener(){
-			this.ui.interactive = true;
-			this.ui.on('click', this.showOptions.bind(this));
+			this.ui.addEventListener('click', this.showOptions.bind(this), true);
 		}
 		
 		takeTurn(){
@@ -82,7 +81,7 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 					tile.markAsExplored();
 				}
 			})
-			this.ui.tint = 0xEEDD33;
+			this.ui.illumine();
 		}
 	}
 

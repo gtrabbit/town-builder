@@ -40,27 +40,21 @@ import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this s
 
 			setListener(){
 				if (!this.isExplored) {
-					this.ui.interactive = true;
-					this.ui.on('click', function() { console.log(this)}.bind(this));
+					this.ui.addEventListener('click', function() { console.log(this)}.bind(this))
 				} else {
-					this.ui.interactive = true;
-					this.ui.on('click', this.showOptions.bind(this));
+					this.ui.addEventListener('click', this.showOptions.bind(this), true);
 				}
 			}
-		
+		//should not be controlling the window's behavior within the tile!
 			showOptions(){
 				if (!this.expedition.hasOwnProperty('confirmed') && !this.expedition.confirmed){
 					this.expedition = new Expedition(this)
 				}
-				if (this.grid.game.infoWindow.isOpen && this.grid.game.infoWindow.activeTile.UID === this.UID) {
-					this.grid.game.infoWindow.close();
-				} else {
-					this.grid.game.infoWindow.openWith(MakeExpeditionUIWindow(this.expedition, this), this);
-				}
+				this.grid.game.infoWindow.openWith(MakeExpeditionUIWindow(this.expedition, this), this);				
 			}
 
 			convertMe(){
-				this.grid.convertTile('civic', this.x, this.y, this.terrain.typeName);
+				this.grid.convertTile('civic', this.x, this.y, this.terrain);
 			}
 
 			markAsExplored(){
@@ -72,15 +66,12 @@ import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this s
 				this.render();
 			}
 
-			render(){ 	//this logic should be passed to the actual ui object
-						//(or somewhere else?), and not handled here
+			render(){ 
 				if (this.isExplored) {
-					this.ui.tint = 0xDDDDDD;
-					this.ui.parent.children[0].tint = 0xDDDDDD;
-					this.ui.interactive = true;
-					this.ui.buttonMode = true;
+					this.ui.illumine();
+					this.ui.enableInteraction();
 				} else {
-					this.ui.tint = 0x777777;
+					this.ui.dim();
 				}	
 			}
 		}

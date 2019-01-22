@@ -112,9 +112,9 @@ import invertSign from '../../common/utils/invert-sign';
         }
 
         placeBuildingUI(building, tile) {
-			const coords = tile.getSpritePosition();
-			building.ui.position.set(coords.x, coords.y);
-			this.buildingLayer.addChild(building.ui);
+            const coords = tile.getSpritePosition();
+			building.ui.setPosition(coords.x, coords.y);
+			this.buildingLayer.addChild(building.ui.getContainer());
         }
         
         removeBuildingUI(building) {

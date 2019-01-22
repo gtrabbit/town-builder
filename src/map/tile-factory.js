@@ -1,9 +1,8 @@
 import Civic from '../map/civic-tile';
 import Square from '../map/square';
 import Wilds from '../map/wilderness-tile';
-import Terrain from './terrain';
 
-        export default function(type, x, y, grid, terrain, growthRate, isReplacement){
+        export default function(type, x, y, grid, terrain, growthRate){
             let tile;
             switch(type){
                 case 'wilds':
@@ -18,9 +17,6 @@ import Terrain from './terrain';
                 default:
                     tile = new Square(x, y, grid, terrain);
                     break;
-            }
-            if (isReplacement) {
-                tile.setTerrain(terrain);
             }
             return tile;
         }

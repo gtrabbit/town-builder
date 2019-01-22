@@ -4,6 +4,9 @@ import makeSettings from './core/settings';
 import './styles/styles.scss';
 import overworldTilesetJSON from '../assets/frames.json';
 import overworldTileset from '../assets/overworld-tiles.png';
+import uiWindow from '../assets/_sheet_window_02.png';
+import uiWindowJSON from '../assets/ui-window-frames.json';
+import uiBackground from '../assets/background-parchment.jpg';
 
 load();
 
@@ -11,11 +14,29 @@ function load() {
 	loadSprites();
 }
 
-
 function startup(resources){
+
+	//have a UI element to decide this, or load from a DB
+	const isNewGame = true;
+	let state = {};
+	let settings = {};
+	if (isNewGame){
+		settings = makeSettings('medium');
+		state = {
+			width: 55,
+			growthRate: 5,
+			height: 55,
+			startingResources: settings.startingResources,
+			startingPopulation: settings.startingPopulation
+		}
+		
+	} else {
+		//xhr to get the game state
+		// then state = {something else...}
+	}
 	
-	const screenHeight = 800;
-	const screenWidth = 900;
+	const screenHeight = settings.displayHeight;
+	const screenWidth = settings.displayWidth;
 	const app = new PIXI.Application(
 		screenWidth,
 		screenHeight,
@@ -35,24 +56,7 @@ function startup(resources){
 		console.log(thisGame)
 	})
 	
-	//have a UI element to decide this, or load from a DB
-	const isNewGame = true;
-	let state = {};
 
-	if (isNewGame){
-		const settings = makeSettings('medium');
-		state = {
-			width: 55,
-			growthRate: 5,
-			height: 55,
-			startingResources: settings.startingResources,
-			startingPopulation: settings.startingPopulation
-		}
-		
-	} else {
-		//xhr to get the game state
-		// then state = {something else...}
-	}
 
 	const thisGame = new Game(state, screenWidth, screenHeight, stage, renderer, animationHook)
 
@@ -61,10 +65,30 @@ function startup(resources){
 }
 
 function loadSprites() {
-	const baseTexture = PIXI.BaseTexture.fromImage(overworldTileset);
-	var sheet = new PIXI.Spritesheet(baseTexture, overworldTilesetJSON);
-	sheet.parse((textures) => {
-		PIXI.mySpritesheet = sheet;
-		startup(sheet);
+	let resourcesReady = 0;
+	const tilesBaseTexture = PIXI.BaseTexture.fromImage(overworldTileset);
+	tilesBaseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
+	const tilesSheet = new PIXI.Spritesheet(tilesBaseTexture, overworldTilesetJSON);
+
+	const windowBaseTexture = PIXI.BaseTexture.fromImage(uiWindow);
+	windowBaseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+	const windowSheet = new PIXI.Spritesheet(windowBaseTexture, uiWindowJSON);
+	const parchment = new PIXI.Sprite.fromImage(uiBackground);
+	PIXI.mySprites = {};
+	PIXI.mySprites.parchment = parchment;
+	const resources = [
+		{name: "windowSheet", resource: windowSheet},
+		{name: "tileSheet", resource: tilesSheet}
+	];
+	resources.forEach(res => {
+		res.resource.parse(texture => {
+			PIXI[res.name] = res.resource;
+			resourcesReady++;
+			if (resourcesReady === resources.length) {
+				startup({});
+			}
+		})
 	});
 }
+
+
