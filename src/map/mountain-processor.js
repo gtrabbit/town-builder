@@ -47,18 +47,16 @@ function normalizeBigRanges(ranges) {
                 return;
             }
             row.sort((a,b) => a.x - b.x);
-            let midPoint = row[Math.floor(row.length / 2)].x;
+            //let midPoint = row[Math.floor(row.length / 2)].x;
             //keep ranges from getting too fat. The height is not visually believable, and can lead to goofy tile configurations
-            for (let index = 0; index < row.length; index++) {
-                let tile = row[index];
-                if (tile.x - 3 > midPoint || tile.x + 4 < midPoint) {
-                    tile.setTerrain('field', false);
-                    row.splice(index, 1);
-                    index--;
-                }
-
-
-            }
+            // for (let index = 0; index < row.length; index++) {
+            //     let tile = row[index];
+            //     if (tile.x - 3 > midPoint || tile.x + 4 < midPoint) {
+            //         tile.setTerrain('field', false);
+            //         row.splice(index, 1);
+            //         index--;
+            //     }
+            // }
         });            
     });
     return ranges;
@@ -68,7 +66,10 @@ function defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, m
     let couldAssignRidgeTile = false;
     row.forEach(tile => {
         let targetType = null;
-        if (tile.x === previousSpineIndex) {
+        if (previousSpineIndex + 5 < tile.x || previousSpineIndex - 5 > tile.x) {
+            tile.setTerrain('field', false);
+            targetType = "heath";
+        } else if (tile.x === previousSpineIndex) {
             couldAssignRidgeTile = true;
             targetType = move === 0 && movedLeftLastTime
                 ? "ridge-forwardDiagonal"
@@ -90,47 +91,79 @@ function defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, m
     return couldAssignRidgeTile
 }
 
+function assignRidgeToRangeRow(row, continuousStraightRidges, movedLeftLastTime, previousSpineIndex) {
+    let currentMidpoint = row[Math.floor(row.length / 2)].x;
+    let move = 0;
+    //if this is the first iteration, just start the spine in the middle
+    if (previousSpineIndex === null) {
+        previousSpineIndex = currentMidpoint;
+    } 
+    //some randomness to break up long vertical ranges, as suggested by guide
+    if (( Math.random() > 0.4 && continuousStraightRidges > 2 ) || (previousSpineIndex !== currentMidpoint && !movedLeftLastTime)) {
+        continuousStraightRidges = 0;
+        move = (previousSpineIndex <= currentMidpoint) 
+            ? 1
+            : -1;
+    }
+    if (move < 0) {
+        previousSpineIndex--;
+    }
+    let couldAssignRidgeTile = defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, move);
+    return {
+        move,
+        couldAssignRidgeTile,
+        continuousStraightRidges,
+        previousSpineIndex
+    }
+}
+
 function defineRidges(ranges) {
     ranges.forEach(range => {
         let previousSpineIndex = null;
         let movedLeftLastTime = null;
-        let continuousStraightRidges = 0;
         let targetIndex = range.tiles.length;
         let inc = 1;
+        let continuousStraightRidges = 0;
         for (let i = 0; i !== targetIndex; i += inc) {
             let row = range.tiles[i];
-            let currentMidpoint = row[Math.floor(row.length / 2)].x;
-            let move = 0;
-            //if this is the first iteration, just start the spine in the middle
-            if (previousSpineIndex === null) {
-                previousSpineIndex = currentMidpoint;
-            } 
-            //some randomness to break up long vertical ranges, as suggested by guide
-            if (( Math.random() > 0.4 && continuousStraightRidges > 2 ) || (previousSpineIndex !== currentMidpoint && !movedLeftLastTime)) {
-                continuousStraightRidges = 0;
-                move = (previousSpineIndex <= currentMidpoint) 
-                    ? 1
-                    : -1;
-            }
-            if (move < 0) {
-                previousSpineIndex--;
-            }
-            let couldAssignRidgeTile = defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, move);
-            let hasBorderOnBottom = range.tiles.length - 1 === i || !couldAssignRidgeTile;
+
+            let result = assignRidgeToRangeRow(row, continuousStraightRidges, movedLeftLastTime, previousSpineIndex)
+            continuousStraightRidges = result.continuousStraightRidges;
+            let move = result.move;
+            let couldAssignRidgeTile = result.couldAssignRidgeTile;
+            previousSpineIndex = result.previousSpineIndex;
+            // let currentMidpoint = row[Math.floor(row.length / 2)].x;
+            // let move = 0;
+            // //if this is the first iteration, just start the spine in the middle
+            // if (previousSpineIndex === null) {
+            //     previousSpineIndex = currentMidpoint;
+            // } 
+            // //some randomness to break up long vertical ranges, as suggested by guide
+            // if (( Math.random() > 0.4 && continuousStraightRidges > 2 ) || (previousSpineIndex !== currentMidpoint && !movedLeftLastTime)) {
+            //     continuousStraightRidges = 0;
+            //     move = (previousSpineIndex <= currentMidpoint) 
+            //         ? 1
+            //         : -1;
+            // }
+            // if (move < 0) {
+            //     previousSpineIndex--;
+            // }
+           // let couldAssignRidgeTile = defineTerrainSubtypeByRow(row, previousSpineIndex, movedLeftLastTime, move);
+            
+           
+           let hasBorderOnBottom = range.tiles.length - 1 === i || !couldAssignRidgeTile;
             if (hasBorderOnBottom) {
                 removeIncongruousTiles(row);
             }
-            // if (!couldAssignRidgeTile) {
-            //     handleDiscontinuousRidges(range, i);
-            //     break;
-            // }
 
+            //updates for next iteration        
+            if (!couldAssignRidgeTile) {
+               // handleDiscontinuousRidges(range, i);
+            } 
 
-            //updates for next iteration
-            previousSpineIndex += move;
-            movedLeftLastTime = move === -1;
-            continuousStraightRidges += move === 0 ? 1 : 0;
-        
+                previousSpineIndex += move;
+                movedLeftLastTime = move === -1;
+                continuousStraightRidges += move === 0 ? 1 : 0;        
         }
 
     });
@@ -156,15 +189,11 @@ function removeIncongruousTiles(row) {
 }
 
 function handleDiscontinuousRidges(range, failedIndex) {
-    let bottomRowIndex = range.tiles.length - 1;
-    for (let i = bottomRowIndex; i > failedIndex; i--) {
-        let currentRow = range.tiles[i];
-        currentRow.forEach((tile, index) => {
-            tile.setTerrain('field', false);
-            tile.setTerrainSubtypeName('heath');
-            range.tiles[i].splice(index, 1);
-        });
+    let currentMidpoint = row[Math.floor(row.length / 2)].x;
+    for (let i = failedIndex; failedIndex < range.tiles.length; i++) {
+
     }
+
 }
 
 function splitMountainRanges(grid) {

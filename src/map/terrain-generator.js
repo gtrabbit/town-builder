@@ -9,33 +9,58 @@ export default {
 		'hills'
 	],
 
+	firstIteration(grid, homeStartPosition){
+		grid.rows.forEach(row => {
+			row.forEach(tile => {
+				if (isCloseTo([tile.x, tile.y], [homeStartPosition[0], homeStartPosition[1]], 5)) {
+					tile.setTerrain('field', false);
+				} else {
+					let roll = Math.random();
+					if (roll < 0.42){
+						tile.setTerrain('forest', false);
+					} else if (roll > 0.84) {
+						tile.setTerrain('hills', false);
+					} else {
+						tile.setTerrain('field', false);
+					}
+				}
+
+			})
+		});
+		return grid;
+	},
 
 	generateTerrain(grid, homeStartPosition){
 		let size = grid.height * grid.width;
 		grid = this.firstIteration(grid, homeStartPosition);
 
 		for (let x = 0; x < 5; x++){
-			grid.rows.forEach((a,j)=>{
-				a.forEach((b,k)=>{
-					let neighbors = b.getNeighbors();
+			grid.rows.forEach((a)=>{
+				a.forEach((tile)=>{
+					let neighbors = tile.getNeighbors();
 					let environs = {
 						forest: 0,
 						hills: 0,
 						field: 0,
-					}
+					};
+
+					let hillVerticalGrowthPropensity = 0;
+
 					neighbors.forEach(n=>{
 						var neighborTile = grid.getTile(n[0], n[1]);
 						neighborTile.hasOwnProperty('terrain') && environs[neighborTile.terrain.typeName]++;
-						
+						if (tile.x != neighborTile.x && neighborTile.terrain.typeName === 'hills' && tile.terrain.typeName === 'hills') {
+							hillVerticalGrowthPropensity+= tile.y === neighborTile.y ? 3 : 1;
+						}
 					});
-					if (environs.hills > 3){
-						b.setTerrain('hills', false);
-					} else if (x > 2 && b.terrain.typeName === 'hills' && environs.forest > 2){
-						b.setTerrain('forest', false);
+					if (environs.hills > 3 || (hillVerticalGrowthPropensity > 3 && x < 3)){
+						tile.setTerrain('hills', false);
+					} else if (x > 2 && tile.terrain.typeName === 'hills' && environs.forest > 2){
+						tile.setTerrain('forest', false);
 					} else if (environs.forest > 5){
-						b.setTerrain('forest', false);
+						tile.setTerrain('forest', false);
 					} else if (x > 2 && environs.field > 4 || x > 4){
-						b.setTerrain('field', false);
+						tile.setTerrain('field', false);
 					}
 				})
 			})
@@ -88,7 +113,6 @@ export default {
 				environs[b.terrain.typeName]++;
 			})
 		})
-
 		return !(environs.forest < size/7 || environs.hills < size/9)
 	},
 
@@ -111,28 +135,8 @@ export default {
 
 	resetTile(tile){
 		tile.terrain.typeName = null;
-	},
-
-	firstIteration(grid, homeStartPosition){
-		grid.rows.forEach(row => {
-			row.forEach(tile => {
-				if (isCloseTo([tile.x, tile.y], [homeStartPosition[0], homeStartPosition[1]], 5)) {
-					tile.setTerrain('field', false);
-				} else {
-					let roll = Math.random();
-					if (roll < 0.4){
-						tile.setTerrain('forest', false);
-					} else if (roll > 0.86) {
-						tile.setTerrain('hills', false);
-					} else {
-						tile.setTerrain('field', false);
-					}
-				}
-
-			})
-		});
-		return grid;
 	}
+
 }
 	
 	
