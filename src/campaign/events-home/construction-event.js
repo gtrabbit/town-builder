@@ -1,6 +1,6 @@
-import Timer from '../../../common/timer';
-import Message from '../../../common/message';
-import EventIndicator from '../../../common/event-indicator';
+import Timer from '../timer';
+import Message from '../message';
+import EventIndicator from '../event-indicator';
     export default function (building, tile, isUpgrade) {
         const timer = new Timer('construction', building.buildTime);
         const indicator = EventIndicator('construction', tile); //subject to change if we get some more animations....

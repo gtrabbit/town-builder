@@ -21,7 +21,7 @@ export default function(tile){
         sprite.width = width;
         let underSprite;
 
-        if (tile.terrain.typeName === 'forest') {
+        if (tile.terrain.checkHasSecondaryTerrainSubtype()) {
             let underSpriteName = tile.getSecondaryTerrainSpriteId();
             let underSpriteTexture = PIXI.tileSheet.textures[underSpriteName];
             underSprite = new PIXI.Sprite(underSpriteTexture);

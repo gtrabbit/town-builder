@@ -1,4 +1,4 @@
-import Message from '../common/message';
+import Message from '../campaign/message';
 import makeDashboard from './dashboard';
 	export default function(){
 

@@ -42,7 +42,7 @@ const spriteMappings = {
         15: {terrainSubtypeName: "grove", sprites:["254", "287"]}
     },
     'cliffs': {
-        0: {terrainSubtypeName: "plateau", sprites:["1"]},
+        0: {terrainSubtypeName: "plateau", sprites:["1", "1", "1", "2", "2", "3", "254", "287"]},
         1: {terrainSubtypeName: "cliff-face", sprites:["353"]},
         2: {terrainSubtypeName: "cliff-face", sprites:["354"]},
         3: {terrainSubtypeName: "cliff-face", sprites:["351"]},

@@ -18,7 +18,7 @@ export default {
 					let roll = Math.random();
 					if (roll < 0.42){
 						tile.setTerrain('forest', false);
-					} else if (roll > 0.84) {
+					} else if (roll > 0.86) {
 						tile.setTerrain('hills', false);
 					} else {
 						tile.setTerrain('field', false);
@@ -44,16 +44,11 @@ export default {
 						field: 0,
 					};
 
-					let hillVerticalGrowthPropensity = 0;
-
 					neighbors.forEach(n=>{
 						var neighborTile = grid.getTile(n[0], n[1]);
 						neighborTile.hasOwnProperty('terrain') && environs[neighborTile.terrain.typeName]++;
-						if (tile.x != neighborTile.x && neighborTile.terrain.typeName === 'hills' && tile.terrain.typeName === 'hills') {
-							hillVerticalGrowthPropensity+= tile.y === neighborTile.y ? 3 : 1;
-						}
 					});
-					if (environs.hills > 3 || (hillVerticalGrowthPropensity > 3 && x < 3)){
+					if (environs.hills > 3){
 						tile.setTerrain('hills', false);
 					} else if (x > 2 && tile.terrain.typeName === 'hills' && environs.forest > 2){
 						tile.setTerrain('forest', false);

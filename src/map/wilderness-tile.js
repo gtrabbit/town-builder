@@ -1,5 +1,5 @@
 import Square from '../map/square';
-import Expedition from '../home/defense/expedition';
+import Expedition from '../campaign/events-expedition/expedition';
 import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this should be called via the expedition, not the tile
 	export default class Wilds extends Square{
 			constructor(x, y, grid, terrain, growthRate){

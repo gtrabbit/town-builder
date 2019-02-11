@@ -1,10 +1,8 @@
 import Grid from '../map/grid';
-import EventResults from '../common/event-results';
-import Message from '../common/message';
 import MapUI from '../map/map-ui';
 import InfoWindow from '../common/info-window/info-window';
 import makeTextBox from '../common/info-window/textbox';
-import SetupEventsBox from '../campaign/campaign-log-ui';
+import EventManager from '../campaign/event-manager';
 
 	export default class Game{
 		constructor(state, screenWidth, screenHeight, stage, renderer, animationHook){
@@ -24,7 +22,7 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 				wordWrapWidth: 230,
 				padding: 10
 			};  //just for now. something better later for sure
-			this.welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
+			
 			this.squareSize = 28; //basically arbitrary, but trying to find what looks good with current sprite resolution
 
 			//=========Display Layers=============//
@@ -47,9 +45,7 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 				width: state.width,
 				height: state.height,
 				turns: state.turns || 0,
-				events: state.events || [],
-				eventArchive: state.eventArchive || {},
-				upcomingEvents: state.upcomingEvents || []
+				eventState: state.eventState || {}				
 			};
 			this.startingResources = state.startingResources;
 			this.startingPopulation = state.startingPopulation;
@@ -57,8 +53,12 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 // we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
 			this.grid = !state.grid ? new Grid(this) : new Grid(this, state.grid);
 			this.home = this.grid.home;
+			
+			//pass what comes in from the constructor (not game.state), because we are checking on undefined (not empty object)
+			this.eventManager = new EventManager(state.eventState);
+
 			//============Logic/Function============///
-			this.eventsDisplay = SetupEventsBox(this.state.events, this.welcomeMessage);
+			
 			this.makeTextBox = makeTextBox;
 			this.infoWindow = InfoWindow(this.basicFontStyle, this.overlays, this.animationHook);
 
@@ -72,6 +72,7 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 		extractState(){
 			return {
 				gameState: this.state,
+				campaignState: this.eventManager.extractState(),
 				gridState: this.grid.extractState()
 			}
 		}
@@ -90,13 +91,12 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 		}
 
 		addEvent(event){
-			this.state.events.push(event);
-			return event;
+			let processedEvent = this.eventManager.addEvent(event);
+			return processedEvent;			
 		}
 
 		removeEvent(eventId){
-			this.state.events.splice(
-				this.state.events.findIndex(a => a.eventId === eventId), 1);
+			return this.eventManager.removeEvent(eventId);			
 		}
 
 		setStage(){
@@ -117,9 +117,10 @@ import SetupEventsBox from '../campaign/campaign-log-ui';
 			this.state.turns++;
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);
-			this.showEventResults();
+			this.eventManager.update(this.state.turns);
 			if (this.pleaseSortTiles) {
-				this.map.sortTiles(this.tileLayer);
+				//commenting this out for now since tiles are not overlapping. Will consider putting it back if needed.
+			//	this.map.sortTiles(this.tileLayer);
 				this.pleaseSortTiles = false;
 			}			
 		}

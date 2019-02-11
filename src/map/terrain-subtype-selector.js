@@ -8,7 +8,7 @@ export function assignSprite(tile) {
     } else if (tile.terrain.typeName === 'field') {
         return assignFieldTerrainSubtype(tile)
     }
-    if (tile.terrain.typeName === 'forest') {
+    if (tile.terrain.checkHasSecondaryTerrainSubtype()) {
         setForestSecondarySprite(tile);
     }
     return assignTerrainSubtype(tile);

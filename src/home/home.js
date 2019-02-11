@@ -2,12 +2,12 @@ import homeDisplay from './dashboard-ui';
 import sumObjects from '../common/utils/sum-objects';
 import cloneObject from '../common/utils/clone-object';
 import compareObjects from '../common/utils/compare-objects';
-import citizenConversion from './citizens/citizen-conversion-event';
+import citizenConversion from '../campaign/events-home/citizen-conversion-event';
 import citizenManagerDisplay from './citizens/citizen-management-ui';
 import BuildingManager from './buildings/building-manager';
 import TileFactory from '../map/tile-factory';
 import PopulationManager from './citizens/citizen-manager';
-import Construction from './buildings/common/construction-event';
+import Construction from '../campaign/events-home/construction-event';
 import DefenseManager from './defense/defense-manager';
 
 	export default class Home {

@@ -20,6 +20,7 @@ import {displaySettings} from '../../core/settings';
             infoWindow.labels.push(label);
         }
 
+        //what is this about?
         const waitThenClearWithCallback = function(time, current, callback) {
             return function(delta) {
                 current+= delta;
@@ -63,17 +64,9 @@ import {displaySettings} from '../../core/settings';
             //add functions to highlight that tile and remove highlighting
             //when the infowindow is removed
             if (selectedTile){
-                setListeners(selectedTile, messageContainer.onDismiss);
-               
-
-            //place the infowindow in relation to the incoming tile
-                infoWindow.position.set(0, displaySettings.displayHeight - 128);
-            } else {
-                infoWindow.position.set(
-                    //would need somehow to calculate the middle of the screen
-                    //if we're not building in relation to a specific tile...
-                )
-            }
+                setListeners(selectedTile, messageContainer.onDismiss);  
+            } 
+            infoWindow.position.set(0, displaySettings.displayHeight - 128);
             
             //Make the closer (little x in corner)
             const closer = makeCloser(infoWindow, infoWindow.close, style);

@@ -15,8 +15,8 @@
     };
 
     export const displaySettings = {
-        displayHeight: 800,
-        displayWidth: 900
+        displayHeight: 600,
+        displayWidth: 800
     }
     export default function(difficulty){
         return {

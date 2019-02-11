@@ -6,6 +6,7 @@ export default class Terrain {
         this.typeName = terrainTypeName;
         this.associatedMountainRange = null;
         this.secondaryTerrainTypeName = null;
+        this.hasSecondaryTerrainSubtype = false;
     }
 
     getSpriteId() {
@@ -16,11 +17,17 @@ export default class Terrain {
         return this.secondaryTerrainSpriteName;
     }
 
+    checkHasSecondaryTerrainSubtype() {
+        return this.hasSecondaryTerrainSubtype;
+    }
+
     setSecondaryTerrainType(typeName) {
+        this.hasSecondaryTerrainSubtype = true;
         this.secondaryTerrainTypeName = typeName;
     }
 
     setSecondaryTerrainSubtype(terrainSubtypeModel) {
+        this.hasSecondaryTerrainSubtype = true;
         this.secondaryTerrainSpriteName = terrainSubtypeModel.spriteName;
         this.secondaryTerrainSpriteIndex = terrainSubtypeModel.spriteIndex;
         this.secondaryTerrainSubtypeName = terrainSubtypeModel.subtypeName;
