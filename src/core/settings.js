@@ -18,10 +18,21 @@
         displayHeight: 600,
         displayWidth: 800
     }
+
+    export const typographyStyles = {
+        basic: {
+            fontFamily: 'Georgia',
+            fontSize: '10pt',
+            wordWrap: true,
+            wordWrapWidth: 230,
+            padding: 10
+        }
+    }
     export default function(difficulty){
         return {
             ...difficultySettings[difficulty],
-            ...displaySettings
+            ...displaySettings,
+            ...typographyStyles
         };
     }
     

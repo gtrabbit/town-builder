@@ -13,7 +13,6 @@ import Terrain from './terrain';
 			this.neighbors = this.setNeighbors(x, y);
 			this.isExplored = false;
 			this.squareSize = grid.squareSize;
-			this.fontStyle = grid.game.basicFontStyle;
 			if (typeof terrain === 'string') {
 				this.setTerrain(terrain, false);
 			} else {

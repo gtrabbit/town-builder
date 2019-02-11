@@ -25,7 +25,7 @@ import constructionIndicator from '../home/buildings/common/construction-indicat
             tile.grid.game.animationHook.remove(indicator.eventAnimation);
         }
 
-        indicator.position.set(tile.ui.parent.x + (tile.squareSize / 3), tile.ui.parent.y + (tile.squareSize / 4));
+        indicator.position.set(tile.ui.x + (tile.squareSize / 3), tile.ui.y + (tile.squareSize / 4));
         indicator.on('added', addAnimation);
         indicator.on('removed', clearAnimation);
         indicator.remove = ()=>{

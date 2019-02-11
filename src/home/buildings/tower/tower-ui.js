@@ -1,7 +1,9 @@
 import uiWrapper from '../../../common/tile-sprite-wrapper';
+import {graphicalResources} from '../../../main';
+
     export default function(tile, level){
         const spriteWrapper = new PIXI.Container();
-        const mapTexture = PIXI.tileSheet.textures["sprite476"];
+        const mapTexture = graphicalResources.tileSheet.textures["sprite476"];
         let mapSprite = new PIXI.Sprite(mapTexture);
         mapSprite.width = Math.floor(tile.squareSize * 0.6);
         mapSprite.height = Math.floor(tile.squareSize * 0.8);

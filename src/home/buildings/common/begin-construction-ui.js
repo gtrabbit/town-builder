@@ -1,24 +1,34 @@
 import fromCamelCase from '../../../common/utils/from-camel-case';
+import {typographyStyles as styles} from '../../../core/settings';
+import textFlash from '../../../common/animations/text-flash';
+import textPop from '../../../common/animations/text-pop';
+
+const style = styles.basic;
+
+
     export default function(tile, buildings){
         let buildingCosts = buildings.reduce((result, b) => {
             result[b.getTypeName()] = b.getCosts(0);
             return result;
         }, {});
+
+        const labels = [];
+
         return {
             onDismiss: function(){ //this is bound to tile
                 //do something?
             },
 
-            recieveStyle: function(style){
+            init: function(){
                 const assignListeners = (buyBuildingType) => {
                     buyBuildingType.on('pointerover', highlight.bind(buyBuildingType));
+                    buyBuildingType.on('pointerout', unhighlight.bind(buyBuildingType));
                     buyBuildingType.on('click', purchase.bind(this));
                 }
 
                 const messageContainer = new PIXI.Container();
                 const heading =         new PIXI.Text("Available Buildings:               Costs:", style);
                 const headSubtitle =    new PIXI.Text("wood / silver", style);
-                this.labels = [];
 
                 let index = 0;
                 for (let key in buildingCosts) {
@@ -46,7 +56,7 @@ import fromCamelCase from '../../../common/utils/from-camel-case';
                         buyBuildingType.buttonMode = true;
                         assignListeners(buyBuildingType);
                         messageContainer.addChild(buyBuildingType, costWrapper);
-                        this.registerLabel(costWrapper);
+                        labels.push(costWrapper);
                         index++;
                     }
                 }
@@ -55,21 +65,25 @@ import fromCamelCase from '../../../common/utils/from-camel-case';
                 headSubtitle.position.set(135, 35);
                 messageContainer.addChild(heading, headSubtitle);
 
-                function purchase(e){
+                function purchase(e) {
                     if (tile.build(e.target.name)){
                         this.close();
                     } else {
-                        this.warn(e.target.name);
+                        warn(e.target.name + '-wrapper');
                     }
                 }
                 
-                function highlight(e){
-                    e.target.scale.set(1.1, 1.1);
-                    this.on('pointerout', unhighlight.bind(e.target));
+                function highlight(e) {
+                    textPop(e.target, 1);                    
                 }
 
-                function unhighlight(e){
-                    this.scale.set(1, 1);
+                function unhighlight(e) {
+                    textPop(e.currentTarget, 0);
+                }
+
+                function warn(labelName) {
+                    let label = labels.find(a => a.name === labelName);
+                    label.children.forEach((a, i) => { if ( i > 0) textFlash('black', 'red', a)});
                 }
 
                 return messageContainer;

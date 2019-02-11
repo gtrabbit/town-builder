@@ -1,3 +1,6 @@
+import {typographyStyles as styles} from '../../../core/settings';
+const style = styles.basic;
+
 import fromCamelCase from '../../../common/utils/from-camel-case';
     export default function(building){
         
@@ -6,7 +9,7 @@ import fromCamelCase from '../../../common/utils/from-camel-case';
                 //do something?
             },
 
-            recieveStyle: function(style) {                
+            init: function() {                
                 const messageContainer = new PIXI.Container();
                 const heading = new PIXI.Text(fromCamelCase(building.type, true) + "(Level " + building.level + ")", style);
                 const upgrade = new PIXI.Text("Upgrade", style);

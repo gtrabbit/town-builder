@@ -8,6 +8,8 @@ import uiWindow from '../assets/_sheet_window_02.png';
 import uiWindowJSON from '../assets/ui-window-frames.json';
 import uiBackground from '../assets/background-parchment.jpg';
 
+export const graphicalResources = {misc: {}};
+
 load();
 
 function load() {
@@ -73,18 +75,17 @@ function loadSprites() {
 	const windowBaseTexture = PIXI.BaseTexture.fromImage(uiWindow);
 	windowBaseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 	const windowSheet = new PIXI.Spritesheet(windowBaseTexture, uiWindowJSON);
-	const parchment = new PIXI.Sprite.fromImage(uiBackground);
-	PIXI.mySprites = {};
-	PIXI.mySprites.parchment = parchment;
-	const resources = [
+	
+	graphicalResources.misc.parchment = uiBackground;
+	const resourceSheets = [
 		{name: "windowSheet", resource: windowSheet},
 		{name: "tileSheet", resource: tilesSheet}
 	];
-	resources.forEach(res => {
+	resourceSheets.forEach(res => {
 		res.resource.parse(texture => {
-			PIXI[res.name] = res.resource;
+			graphicalResources[res.name] = res.resource;
 			resourcesReady++;
-			if (resourcesReady === resources.length) {
+			if (resourcesReady === resourceSheets.length) {
 				startup({});
 			}
 		})

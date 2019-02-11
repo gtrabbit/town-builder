@@ -1,14 +1,9 @@
-export default function() {
-    return (color, target, ticks, ticker) => {
-        
-        let count = 0;
-        const flashOff = (delta, time) => {
-            count += delta;
-            if (count > time) {
-                ticker.remove()
-            }
-        }
-        
-        ticker.add()
-    }
+export default function(originalColor, targetColor, pixiText) {
+    const backToOriginalColor = (text) => {
+        text.style.fill = originalColor;
+    };
+    pixiText.style.fill = targetColor;
+    window.setTimeout(function() {
+        backToOriginalColor(pixiText);
+    }, 300);
 };

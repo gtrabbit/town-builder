@@ -1,15 +1,15 @@
-import SetupEventsBox from '../campaign/campaign-log-ui';
 import Message from '../campaign/message';
 import EventResults from '../campaign/event-results';
+import EventBox from '../campaign/new-campaign-log-ui';
 
 const welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
 
 export default class EventManager {
-    constructor(eventState) {
+    constructor(eventState, displayLayer) {
         this.eventArchive = eventState !== undefined ? eventState.archive : [];
         this.events = eventState !== undefined ? eventState.events : [];
-        console.log(this.events);
-        this.display = SetupEventsBox(this.events, welcomeMessage);
+        this.displayLayer = displayLayer;
+        this.eventDisplay = new EventBox(this.displayLayer);
     }
 
     extractState() {
@@ -39,7 +39,7 @@ export default class EventManager {
             }
         }
         this.eventArchive[turnNumber] = completedEvents;
-        EventResults(this.eventArchive[turnNumber], turnNumber);
+        this.eventDisplay.showEventResults(this.eventArchive, turnNumber);
     }
     
 }

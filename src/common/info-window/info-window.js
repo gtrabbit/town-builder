@@ -1,8 +1,8 @@
 import makeTextbox from './textbox';
-import makeCloser from './closer';
+import makeCloser from '../ui-elements/closer';
 import {displaySettings} from '../../core/settings';
 
-    export default function makeInfoWindow(style, infowindowLayer, ticker){
+    export default function makeInfoWindow(infowindowLayer, ticker){
 
         let infoWindow = new PIXI.Container();
         infoWindow.layer = infowindowLayer;
@@ -16,33 +16,7 @@ import {displaySettings} from '../../core/settings';
                 infoWindow.parent.removeChild(infoWindow);
             }            
         }
-        infoWindow.registerLabel = function(label) {
-            infoWindow.labels.push(label);
-        }
 
-        //what is this about?
-        const waitThenClearWithCallback = function(time, current, callback) {
-            return function(delta) {
-                current+= delta;
-                if (current > time) {
-                    callback();
-                    console.log(this);
-                    ticker.remove(this);
-                }
-            }
-        }
-
-        const paintItBlack = (label) => {
-            label.children.forEach(a => {a.style.fill = 'black'});
-        }
-
-        infoWindow.warn = function(labelName) {
-            let label = this.labels.find(a => a.name === labelName + "-wrapper");
-            label.children.forEach((a, i) => { if ( i > 0) a.style.fill = 'red'});
-            window.setTimeout(function() {
-                paintItBlack(label);
-            }, 300);
-        }
         //function called when one wants to open the infowindow
         //with a particular message (basically always, right?)
         infoWindow.openWith = function(messageContainer, selectedTile){
@@ -53,9 +27,7 @@ import {displaySettings} from '../../core/settings';
             infoWindow.removeChildren();
 
             //create a textbox based on the size of the incoming message
-            let textbox = makeTextbox(
-                messageContainer.recieveStyle.call(infoWindow,
-                                                 style));
+            let textbox = makeTextbox(messageContainer.init.call(infoWindow));
 
             //add the textbox to the infowindow
             infoWindow.addChild(textbox);
@@ -69,14 +41,14 @@ import {displaySettings} from '../../core/settings';
             infoWindow.position.set(0, displaySettings.displayHeight - 128);
             
             //Make the closer (little x in corner)
-            const closer = makeCloser(infoWindow, infoWindow.close, style);
-
+            const closer = makeCloser(infoWindow, infoWindow.close);
             textbox.addChild(closer);
 
             //add the infowindow to the view
             infoWindow.layer.addChild(infoWindow);
-
         }
+        
+        return infoWindow;
 
 //some helper stuff
 
@@ -96,5 +68,4 @@ import {displaySettings} from '../../core/settings';
             infoWindow.removeAllListeners();
         }
 
-        return infoWindow;
     }

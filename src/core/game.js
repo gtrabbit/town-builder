@@ -15,25 +15,18 @@ import EventManager from '../campaign/event-manager';
 			this.screenHeight = screenHeight;
 
 			//===========Constants============//
-			this.basicFontStyle = {
-				fontFamily: 'Georgia',
-				fontSize: '10pt',
-				wordWrap: true,
-				wordWrapWidth: 230,
-				padding: 10
-			};  //just for now. something better later for sure
 			
 			this.squareSize = 28; //basically arbitrary, but trying to find what looks good with current sprite resolution
 
 			//=========Display Layers=============//
 			this.overlays = new PIXI.Container();
-			this.infoWindowLayer = new PIXI.Container();
+			this.campaignLogLayer = new PIXI.Container();
 			this.floatLayer = new PIXI.Container();
 			this.tileLayer = new PIXI.Container();
 			this.buildingLayer = new PIXI.Container();
 			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);
 			this.floatLayer.name = 'floatLayer';
-			this.infoWindowLayer.name = 'infoWindowLayer';
+			this.campaignLogLayer.name = 'campaignLogLayer';
 			this.overlays.name = 'overlays';
 			this.map.name = 'map';
 			this.tileLayer.name = 'tileLayer';
@@ -55,12 +48,12 @@ import EventManager from '../campaign/event-manager';
 			this.home = this.grid.home;
 			
 			//pass what comes in from the constructor (not game.state), because we are checking on undefined (not empty object)
-			this.eventManager = new EventManager(state.eventState);
+			this.eventManager = new EventManager(state.eventState, this.campaignLogLayer);
 
 			//============Logic/Function============///
 			
 			this.makeTextBox = makeTextBox;
-			this.infoWindow = InfoWindow(this.basicFontStyle, this.overlays, this.animationHook);
+			this.infoWindow = InfoWindow(this.overlays, this.animationHook);
 
 			//================ Flags ==============//
 			this.pleaseSortTiles;
@@ -100,8 +93,8 @@ import EventManager from '../campaign/event-manager';
 		}
 
 		setStage(){
-			this.stage.addChild(this.map, this.overlays);
-			this.map.addChild(this.tileLayer, this.buildingLayer, this.floatLayer, this.infoWindowLayer);
+			this.stage.addChild(this.map, this.overlays, this.campaignLogLayer);
+			this.map.addChild(this.tileLayer, this.buildingLayer, this.floatLayer);
 			for (let rowNumber = this.grid.rows.length-1; rowNumber >= 0; rowNumber--){
 				for (let colNum = this.grid.rows[rowNumber].length-1; colNum >= 0; colNum--){
 					let tileUI = this.grid.getTile(rowNumber, colNum).makeUI();
@@ -118,10 +111,10 @@ import EventManager from '../campaign/event-manager';
 			this.grid.home.update(this.state.turns);
 			this.grid.update(this.state.turns);
 			this.eventManager.update(this.state.turns);
-			if (this.pleaseSortTiles) {
-				//commenting this out for now since tiles are not overlapping. Will consider putting it back if needed.
-			//	this.map.sortTiles(this.tileLayer);
-				this.pleaseSortTiles = false;
-			}			
+			// if (this.pleaseSortTiles) {
+			// 	//commenting this out for now since tiles are not overlapping. Will consider putting it back if needed.
+			// //	this.map.sortTiles(this.tileLayer);
+			// 	this.pleaseSortTiles = false;
+			// }			
 		}
 	}

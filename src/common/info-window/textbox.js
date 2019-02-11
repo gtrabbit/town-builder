@@ -1,4 +1,6 @@
 import {displaySettings} from '../../core/settings';
+import {graphicalResources} from '../../main';
+import stopClick from '../../common/utils/stop-click-bubble-down';
 
     export default function makeTextBox(message) {
 
@@ -11,18 +13,14 @@ import {displaySettings} from '../../core/settings';
         border.endFill();
 
 
-        let textBox = PIXI.mySprites.parchment;
+        let textBox = graphicalResources.sprites.parchment;
         textBox.height = 128;
         textBox.width = displaySettings.displayWidth;
         
         message.position.set(20, 15);
         textBox.interactive = true;
-        textBox.on('click', stopClickEvents);
+        stopClick(textBox);
 
-        function stopClickEvents(event) {
-            event.stopPropagation();
-            event.reset();
-        }
         container.addChild(textBox, message, border);
         return container;
     }

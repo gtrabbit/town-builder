@@ -1,4 +1,5 @@
-//this is really ugly...
+import {typographyStyles as styles} from '../../core/settings';
+const style = styles.basic;
 
 
 	export default function MakeExpeditionUIWindow(expedition, tile) {
@@ -13,7 +14,7 @@
 				}
 			},
 
-			recieveStyle: function(style) {
+			init: function() {
 				const messageContainer = new PIXI.Container();			
 				const dvMsg = new PIXI.Text("Danger Rating: " + expedition.dangerValue, style);
 				messageContainer.addChild(dvMsg);

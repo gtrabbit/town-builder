@@ -1,4 +1,5 @@
 import TileSpriteWrapper from '../common/tile-sprite-wrapper';
+import {graphicalResources} from '../main';
 
 export default function(tile){
  
@@ -15,7 +16,7 @@ export default function(tile){
 
 
         let spriteId = tile.getSpriteId();
-        let uiTexture = PIXI.tileSheet.textures[spriteId];
+        let uiTexture = graphicalResources.tileSheet.textures[spriteId];
         let sprite = new PIXI.Sprite(uiTexture);
         sprite.height = height;
         sprite.width = width;
@@ -23,7 +24,7 @@ export default function(tile){
 
         if (tile.terrain.checkHasSecondaryTerrainSubtype()) {
             let underSpriteName = tile.getSecondaryTerrainSpriteId();
-            let underSpriteTexture = PIXI.tileSheet.textures[underSpriteName];
+            let underSpriteTexture = graphicalResources.tileSheet.textures[underSpriteName];
             underSprite = new PIXI.Sprite(underSpriteTexture);
             underSprite.height = height;
             underSprite.width = width;
