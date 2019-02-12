@@ -1,5 +1,4 @@
 import Message from '../campaign/message';
-import EventResults from '../campaign/event-results';
 import EventBox from '../campaign/new-campaign-log-ui';
 
 const welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
@@ -9,7 +8,9 @@ export default class EventManager {
         this.eventArchive = eventState !== undefined ? eventState.archive : [];
         this.events = eventState !== undefined ? eventState.events : [];
         this.displayLayer = displayLayer;
-        this.eventDisplay = new EventBox(this.displayLayer);
+        this.eventDisplay = new EventBox(this.displayLayer, this.previousEvents, this.nextEvents);
+        this.currentTurnNumber = 0;
+        this.viewingTurnNumber = 0;
     }
 
     extractState() {
@@ -17,6 +18,20 @@ export default class EventManager {
             events,
             eventArchive
         }
+    }
+
+    previousEvents(event) {
+        if (this.viewingTurnNumber > 0) {
+            this.viewingTurnNumber--;
+            this.eventDisplay.showEventResults(this.eventArchive, this.viewingTurnNumber, this.viewingTurnNumber === this.currentTurnNumber);
+        }        
+    }
+
+    nextEvents(event) {
+        if (this.viewingTurnNumber < this.currentTurnNumber) {
+            this.viewingTurnNumber++;
+            this.eventDisplay.showEventResults(this.eventArchive, this.viewingTurnNumber, this.viewingTurnNumber === this.currentTurnNumber);
+        }   
     }
 
     addEvent(event) {
@@ -30,6 +45,8 @@ export default class EventManager {
     }
 
     update(turnNumber) {
+        this.currentTurnNumber = turnNumber;
+        this.viewingTurnNumber = turnNumber;
         const completedEvents = [];
         for (let i = 0; i < this.events.length; i++) {
             let event = this.events[i];
@@ -39,7 +56,7 @@ export default class EventManager {
             }
         }
         this.eventArchive[turnNumber] = completedEvents;
-        this.eventDisplay.showEventResults(this.eventArchive, turnNumber);
+        this.eventDisplay.showEventResults(this.eventArchive[turnNumber], turnNumber, true);
     }
     
 }

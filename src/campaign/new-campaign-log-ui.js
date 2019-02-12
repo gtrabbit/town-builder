@@ -4,6 +4,7 @@ import TabSet from '../common/ui-elements/tab-set';
 import {graphicalResources} from '../main';
 import stopClick from '../common/utils/stop-click-bubble-down';
 import closer from '../common/ui-elements/closer';
+import pop from '../common/animations/generic-pop';
 
 //return a PIXI.Container()
 export default class EventBox {
@@ -14,10 +15,13 @@ export default class EventBox {
     showEventResults(events, turnNumber) {
         //title
         this.title.text = this.title.text.slice(0, 4).concat(turnNumber);
+        this.tabSet.tabs[0].setActive();
+        
+
 
     }
 
-    createDisplayObject(displayLayer) {
+    createDisplayObject(displayLayer, nextAction, previousAction) {
         const xOffset = 100;
         const log = new PIXI.Container();
         log.height = displaySettings.displayHeight;
@@ -25,7 +29,7 @@ export default class EventBox {
         const main = new PIXI.Container();
         main.name = "campaign-log__main"
         const fuzzyOverlay = new PIXI.Container();
-        log.addChild(main, fuzzyOverlay);
+        
         main.position.set(xOffset, 0);
         main.interactive = true;
         stopClick(main);
@@ -37,7 +41,7 @@ export default class EventBox {
         fuzzy.beginFill(0x222222, .6);
         fuzzy.drawRect(0, 0, xOffset, displaySettings.displayHeight);
         fuzzy.endFill();
-        fuzzyOverlay.addChild(fuzzy);
+        
         fuzzy.interactive = true;
         stopClick(fuzzy);
             
@@ -57,22 +61,56 @@ export default class EventBox {
             displayLayer.removeChild(log);
         }
         const closerUi = closer(log, closeFunction);
-        log.addChild(closerUi);    
+   
         fuzzy.on('click', closeFunction);
-    
+
+        //next / previous buttons
+        const nextButton = new PIXI.Sprite.from(graphicalResources.misc.arrow);
+        const previousButton = new PIXI.Sprite.from(graphicalResources.misc.arrow);
+        resizeButton(nextButton, true);
+        resizeButton(previousButton);
+        nextButton.position.set(this.title.x + this.title.width + 10, this.title.y);
+        previousButton.position.set(this.title.x - 50, this.title.y);
+        this.nextButton = nextButton;
+        this.previousButton = previousButton;
+        this.previousButton.on('click', previousAction);
+        this.nextButton.on('click', nextAction);
+
         //create tabs
         const tabLabels = ['summary', 'events', 'militia', 'resources', 'population'];
         const tabHeight = 64;
         const tabWidth = 32;
         const tabs = tabLabels.map(l => new Tab(l, tabWidth, tabHeight));
+
+        this.tabSet = new TabSet(tabs);
+        this.main = main;
+
+        
+        //add children in desired order
+        log.addChild(main, fuzzyOverlay, closerUi);
+        displayLayer.addChild(log);
+
+        fuzzyOverlay.addChild(fuzzy);
+
+        main.addChild(this.title, nextButton, previousButton);
+        
         tabs.forEach((a, i) => {
             main.addChild(a.container);
             a.setPosition(2, i * tabHeight);        
         });
-        this.tabSet = new TabSet(tabs);
-        this.main = main;
-        this.main.addChild(this.title);
-        displayLayer.addChild(log);
+
+        //return
         return log;
+
     }
+}
+
+function resizeButton(button, rotate) {
+    button.height = 16;
+    button.width = 16;
+    button.anchor.set(0.5, 0.5);
+    button.rotation = rotate ? Math.PI : 0;
+    button.interactive = true;
+    button.buttonMode = true;
+    pop(button);
 }

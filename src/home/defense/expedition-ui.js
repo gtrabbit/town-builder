@@ -1,5 +1,5 @@
 import {typographyStyles as styles} from '../../core/settings';
-const style = styles.basic;
+const style = styles('basic');
 
 
 	export default function MakeExpeditionUIWindow(expedition, tile) {

@@ -7,6 +7,7 @@ import overworldTileset from '../assets/overworld-tiles.png';
 import uiWindow from '../assets/_sheet_window_02.png';
 import uiWindowJSON from '../assets/ui-window-frames.json';
 import uiBackground from '../assets/background-parchment.jpg';
+import blackArrow from '../assets/arrow_118.png';
 
 export const graphicalResources = {misc: {}};
 
@@ -76,6 +77,7 @@ function loadSprites() {
 	windowBaseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
 	const windowSheet = new PIXI.Spritesheet(windowBaseTexture, uiWindowJSON);
 	
+	graphicalResources.misc.arrow = blackArrow;
 	graphicalResources.misc.parchment = uiBackground;
 	const resourceSheets = [
 		{name: "windowSheet", resource: windowSheet},

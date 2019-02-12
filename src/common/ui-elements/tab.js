@@ -1,7 +1,6 @@
 import {graphicalResources} from '../../main';
 import {typographyStyles} from '../../core/settings';
-const textStyle = typographyStyles.basic;
-textStyle.fill = 'white';
+const textStyle = typographyStyles('basic', 'white');
 
 export default class Tab {
     constructor(label, width, height) {

@@ -2,7 +2,7 @@ import makeTextbox from './textbox';
 import makeCloser from '../ui-elements/closer';
 import {displaySettings} from '../../core/settings';
 
-    export default function makeInfoWindow(infowindowLayer, ticker){
+    export default function makeInfoWindow(infowindowLayer){
 
         let infoWindow = new PIXI.Container();
         infoWindow.layer = infowindowLayer;

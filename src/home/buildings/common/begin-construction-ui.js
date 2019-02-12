@@ -1,9 +1,9 @@
 import fromCamelCase from '../../../common/utils/from-camel-case';
 import {typographyStyles as styles} from '../../../core/settings';
 import textFlash from '../../../common/animations/text-flash';
-import textPop from '../../../common/animations/text-pop';
+import pop from '../../../common/animations/generic-pop';
 
-const style = styles.basic;
+const style = styles('basic');
 
 
     export default function(tile, buildings){
@@ -21,8 +21,7 @@ const style = styles.basic;
 
             init: function(){
                 const assignListeners = (buyBuildingType) => {
-                    buyBuildingType.on('pointerover', highlight.bind(buyBuildingType));
-                    buyBuildingType.on('pointerout', unhighlight.bind(buyBuildingType));
+                    pop(buyBuildingType);
                     buyBuildingType.on('click', purchase.bind(this));
                 }
 

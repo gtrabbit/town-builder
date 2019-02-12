@@ -19,15 +19,20 @@
         displayWidth: 800
     }
 
-    export const typographyStyles = {
-        basic: {
-            fontFamily: 'Georgia',
-            fontSize: '10pt',
-            wordWrap: true,
-            wordWrapWidth: 230,
-            padding: 10
+    export function typographyStyles(type, color = 'black') {
+        switch(type) {
+            default:
+                return {
+                    fontFamily: 'Georgia',
+                    fontSize: '10pt',
+                    wordWrap: true,
+                    wordWrapWidth: 230,
+                    padding: 10,
+                    fill: color
+                }
         }
     }
+
     export default function(difficulty){
         return {
             ...difficultySettings[difficulty],

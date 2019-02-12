@@ -1,6 +1,7 @@
 import {displaySettings} from '../../core/settings';
 import {graphicalResources} from '../../main';
 import stopClick from '../../common/utils/stop-click-bubble-down';
+import { Sprite } from 'pixi.js';
 
     export default function makeTextBox(message) {
 
@@ -13,7 +14,7 @@ import stopClick from '../../common/utils/stop-click-bubble-down';
         border.endFill();
 
 
-        let textBox = graphicalResources.sprites.parchment;
+        let textBox = new Sprite.from(graphicalResources.misc.parchment);
         textBox.height = 128;
         textBox.width = displaySettings.displayWidth;
         
