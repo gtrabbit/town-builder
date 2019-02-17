@@ -6,9 +6,9 @@ import closerButton from '../../../assets/close-button.png';
         closer.buttonMode = true;
         closer.on('click', () => {
             closingFunction();
-
         });
         const size = container.getBounds();
+        closer.tint = 0x222222;
         closer.position.set(size.width - 32, 8);
         closer.height = 24;
         closer.width = 24;

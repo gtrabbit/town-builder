@@ -2,19 +2,14 @@ import Game from './core/game';
 import * as PIXI from 'pixi.js';
 import makeSettings from './core/settings';
 import './styles/styles.scss';
-import overworldTilesetJSON from '../assets/frames.json';
-import overworldTileset from '../assets/overworld-tiles.png';
-import uiWindow from '../assets/_sheet_window_02.png';
-import uiWindowJSON from '../assets/ui-window-frames.json';
-import uiBackground from '../assets/background-parchment.jpg';
-import blackArrow from '../assets/arrow_118.png';
+import loadAssets from './core/load-assets';
 
 export const graphicalResources = {misc: {}};
 
 load();
 
 function load() {
-	loadSprites();
+	loadAssets(startup, graphicalResources);
 }
 
 function startup(resources){
@@ -43,7 +38,7 @@ function startup(resources){
 	const app = new PIXI.Application(
 		screenWidth,
 		screenHeight,
-		{backgroundColor: 0x111111})
+		{backgroundColor: 0x111111});
 	const renderer = app.renderer;
 	app.view.className = "application"
 	document.body.appendChild(app.view);
@@ -67,31 +62,5 @@ function startup(resources){
 	thisGame.update();
 }
 
-function loadSprites() {
-	let resourcesReady = 0;
-	const tilesBaseTexture = PIXI.BaseTexture.fromImage(overworldTileset);
-	tilesBaseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
-	const tilesSheet = new PIXI.Spritesheet(tilesBaseTexture, overworldTilesetJSON);
-
-	const windowBaseTexture = PIXI.BaseTexture.fromImage(uiWindow);
-	windowBaseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-	const windowSheet = new PIXI.Spritesheet(windowBaseTexture, uiWindowJSON);
-	
-	graphicalResources.misc.arrow = blackArrow;
-	graphicalResources.misc.parchment = uiBackground;
-	const resourceSheets = [
-		{name: "windowSheet", resource: windowSheet},
-		{name: "tileSheet", resource: tilesSheet}
-	];
-	resourceSheets.forEach(res => {
-		res.resource.parse(texture => {
-			graphicalResources[res.name] = res.resource;
-			resourcesReady++;
-			if (resourcesReady === resourceSheets.length) {
-				startup({});
-			}
-		})
-	});
-}
 
 

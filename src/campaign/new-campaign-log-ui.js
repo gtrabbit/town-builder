@@ -56,14 +56,6 @@ export default class EventBox {
         this.title.pivot.set(this.title.width / 2, this.title.height / 2);
         this.title.position.set(main.width / 2, 25);
 
-        //create closer
-        const closeFunction = () => {
-            displayLayer.removeChild(log);
-        }
-        const closerUi = closer(log, closeFunction);
-   
-        fuzzy.on('click', closeFunction);
-
         //next / previous buttons
         const nextButton = new PIXI.Sprite.from(graphicalResources.misc.arrow);
         const previousButton = new PIXI.Sprite.from(graphicalResources.misc.arrow);
@@ -85,14 +77,20 @@ export default class EventBox {
         this.tabSet = new TabSet(tabs);
         this.main = main;
 
-        
+        //create closer
+        const closeFunction = () => {
+            displayLayer.removeChild(log);
+        }
+        const closerUi = closer(main, closeFunction);
+        fuzzy.on('click', closeFunction);
+
         //add children in desired order
-        log.addChild(main, fuzzyOverlay, closerUi);
+        log.addChild(main, fuzzyOverlay);
         displayLayer.addChild(log);
 
         fuzzyOverlay.addChild(fuzzy);
 
-        main.addChild(this.title, nextButton, previousButton);
+        main.addChild(this.title, nextButton, previousButton, closerUi);
         
         tabs.forEach((a, i) => {
             main.addChild(a.container);
