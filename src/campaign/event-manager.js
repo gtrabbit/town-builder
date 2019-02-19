@@ -1,14 +1,25 @@
 import Message from '../campaign/message';
-import EventBox from '../campaign/new-campaign-log-ui';
+import EventBox from './campaign-log-ui';
+import {eventCategories} from '../core/constants';
+import TabsetConfig from '../common/ui-elements/tabset-config';
+import {graphicalResources} from '../main';
 
-const welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!']);
+const welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!'], eventCategories.summary);
 
 export default class EventManager {
     constructor(eventState, displayLayer) {
         this.eventArchive = eventState !== undefined ? eventState.archive : [];
         this.events = eventState !== undefined ? eventState.events : [];
         this.displayLayer = displayLayer;
-        this.eventDisplay = new EventBox(this.displayLayer, this.previousEvents, this.nextEvents);
+        var tabConfigs = [
+            {icon: graphicalResources.misc.summaryIcon, category: eventCategories.summary},
+            {icon: graphicalResources.misc.newsIcon, category: eventCategories.event},
+            {icon: graphicalResources.misc.clashIcon, category: eventCategories.military},
+            {icon: graphicalResources.misc.resourceIcon, category: eventCategories.development},            
+            {icon: graphicalResources.citizens.farmer, category: eventCategories.domestic}
+        ];
+        var tabsetConfig = new TabsetConfig(tabConfigs, 64, 32);
+        this.eventDisplay = new EventBox(this.displayLayer, this.previousEvents, this.nextEvents, tabsetConfig);
         this.currentTurnNumber = 0;
         this.viewingTurnNumber = 0;
     }

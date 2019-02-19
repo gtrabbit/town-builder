@@ -1,16 +1,16 @@
 import makeEventIndicator from '../event-indicator';
-import Timer from '../timer';
-	export default class Expedition {
+import GameEvent from '../game-event';
+import {eventCategories} from '../../core/constants';
+
+	export default class Expedition extends GameEvent {
 		constructor(tile){
-			this.type = 'expedition';
+			super(Math.floor(Math.sqrt(this.dangerValue)), eventCategories.military);
 			this.militia = 0;
 			this.militiaAvailable = tile.grid.home.population.militiaAvailable || 0;
 			this.eventId = "ex-" + tile.UID || '99999';
 			this.dangerValue = tile.getDanger() || 0;
 			this.confirmed = false;
 			this.tile = tile;
-			const waitPeriod = Math.ceil(this.dangerValue / 2);
-			this.timer = new Timer('event', waitPeriod);
 		}
 
 		isValid(){
@@ -26,27 +26,12 @@ import Timer from '../timer';
 				tile: this.tile,
 				type: this.type
 			}
-		}
-
-		calcWinPercentage(militia) {
-			let baseDV = this.dangerValue;
-			let DVrange = [baseDV * 4, (baseDV * 6) - 1];
-			let lossThresh = ~~(militia / 2) + 1;
-			let c = (militia * 3) + (lossThresh * 2);
-			let perc = DVrange[1] - c;
-			let range = (DVrange[1] - DVrange[0]) + 1;
-			let chances = Math.max(c - DVrange[0], -1) + 1;
-			if (!chances) {
-				return 0;
-			} else {
-				return Math.min((chances / range).toFixed(2), 1);
-			}
-		}
+		}		
 
 		adjustMilitia(value) {
 			this.militia += value;
 			this.militiaAvailable -= value;
-			return this.militia ? this.calcWinPercentage(this.militia) : null;
+			return this.militia ? this.calcWinPercentage() : null;
 		}
 
 		confirmExpedition() {
@@ -60,7 +45,6 @@ import Timer from '../timer';
 			} else {
 				console.log('that will never work...');
 			}
-
 		}
 
 		cancelExpedition() {
@@ -74,13 +58,11 @@ import Timer from '../timer';
 			this.indicator.remove();
 		}
 
-
 		calcWinPercentage(){
 			let baseDV = this.dangerValue;
 			let DVrange = [baseDV*4, (baseDV*6)-1];
 			let lossThresh = ~~(this.militia/2) + 1;
 			let c = (this.militia*3) + (lossThresh * 2);
-			let perc = DVrange[1] - c;
 			let range = (DVrange[1] - DVrange[0])+1;
 			let chances = Math.max(c - DVrange[0], -1) + 1;
 			if (!chances){
@@ -92,14 +74,16 @@ import Timer from '../timer';
 
 		resolve(){
 			let results = this.determineResults();
-
 			this.tile.grid.home.modifyPopulace('militia', -results.deaths);
 			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
 			this.clearIndicator();
 			if (!results.defeat){
 				this.tile.convertMe();
 			}
-			return results;
+			let title = results.defeat ? "Defeat!" : "Victory!";
+			let content = [`${results.deaths} militia were lost in the battle`];
+
+			return this.createMessage(title, content);			
 		}
 	}
 

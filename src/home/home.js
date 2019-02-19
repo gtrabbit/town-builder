@@ -179,6 +179,7 @@ import DefenseManager from './defense/defense-manager';
 				}	
 			}
 			this.addResource(gain);
+			//feels dirty because basically we're pushing resolved events...
 			this.display.summarizeGrowth(compareObjects(oldResources, this.resources), compareObjects(oldPopulation, this.population))
 				.forEach(a=>this.game.addEvent(a));
 			this.defenseManager.determineLosses(popDef);

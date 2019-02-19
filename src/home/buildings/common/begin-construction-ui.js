@@ -70,15 +70,7 @@ const style = styles('basic');
                     } else {
                         warn(e.target.name + '-wrapper');
                     }
-                }
-                
-                function highlight(e) {
-                    textPop(e.target, 1);                    
-                }
-
-                function unhighlight(e) {
-                    textPop(e.currentTarget, 0);
-                }
+                }            
 
                 function warn(labelName) {
                     let label = labels.find(a => a.name === labelName);

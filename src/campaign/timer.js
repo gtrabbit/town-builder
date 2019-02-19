@@ -1,8 +1,7 @@
 
     export default class Timer {
-        constructor(type, duration){
+        constructor(duration){
             this.duration = duration;
-            this.type = type;
         }
 
         modifyDuration(amount){

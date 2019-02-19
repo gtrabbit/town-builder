@@ -1,21 +1,23 @@
-import Timer from '../timer';
-import Message from '../message';
 import EventIndicator from '../event-indicator';
-    export default function (building, tile, isUpgrade) {
-        const timer = new Timer('construction', building.buildTime);
-        const indicator = EventIndicator('construction', tile); //subject to change if we get some more animations....
-        const content = isUpgrade ? (building.upgradeCompletionMsg || `Your ${building.type} has been upgraded.`) : building.completionMesg || 'your ' + building.type + ' has been completed!';
-        const title = isUpgrade ? "Upgrade complete!" : "Construction complete!"
-        const resolve = () => {
-            if (isUpgrade) {
-                tile.grid.home.buildingManager.finishUpgrade(building, tile);
-            } else {
-                tile.grid.home.buildingManager.finishConstruction(building, tile);
-            }
-            
-            indicator.remove();
-            return new Message(title, [content]);
-        }
+import {eventCategories} from '../../core/constants';
+import GameEvent from '../../campaign/game-event';
 
-        return {timer, resolve, indicator};
+export default class ConstructionEvent extends GameEvent{
+    constructor(building, tile, isUpgrade) {
+        super(building.buildTime, eventCategories.development);
+        this.indicator = EventIndicator('construction', tile); //subject to change if we get some more animations....
+        this.content = isUpgrade ? (building.upgradeCompletionMsg || `Your ${building.type} has been upgraded.`) : building.completionMesg || 'your ' + building.type + ' has been completed!';
+        this.title = isUpgrade ? "Upgrade complete!" : "Construction complete!";
     }
+
+    resolve() {
+        if (isUpgrade) {
+            tile.grid.home.buildingManager.finishUpgrade(building, tile);
+        } else {
+            tile.grid.home.buildingManager.finishConstruction(building, tile);
+        }
+        
+        indicator.remove();
+        return this.createMessage(this.title, [this.content]);
+    }
+}

@@ -1,5 +1,7 @@
 import Message from '../campaign/message';
 import makeDashboard from './dashboard';
+import {eventCategories} from '../core/constants';
+
 	export default function(){
 
 		const display = makeDashboard();
@@ -38,8 +40,8 @@ import makeDashboard from './dashboard';
 			if (popSummaries.length < 1){
 				popSummaries.push('Nothing new to report');
 			}
-			return [new Message('Treasurer\'s Log:', resSummaries),
-				new Message('Office of the Census:', popSummaries)]
+			return [new Message('Treasurer\'s Log:', resSummaries, eventCategories.domestic),
+				new Message('Office of the Census:', popSummaries, eventCategories.domestic)]
 		}
 
 		return {

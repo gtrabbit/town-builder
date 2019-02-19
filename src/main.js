@@ -59,7 +59,7 @@ function startup(resources){
 	const thisGame = new Game(state, screenWidth, screenHeight, stage, renderer, animationHook)
 
 	thisGame.setStage();
-	thisGame.update();
+	thisGame.update(); //this increments by one day at the beginning, which I might not want to do. Was necessary at some point, but should look into going without it.
 }
 
 

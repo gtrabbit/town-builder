@@ -1,9 +1,7 @@
 import {graphicalResources} from '../../main';
-import {typographyStyles} from '../../core/settings';
-const textStyle = typographyStyles('basic', 'white');
 
 export default class Tab {
-    constructor(label, width, height) {
+    constructor(label, iconTexture, width, height) {
         this.container = new PIXI.Container();
         let darkTexture = graphicalResources.windowSheet.textures.blockConcaveDark;
         let lightTexture = graphicalResources.windowSheet.textures.blockConvex;
@@ -20,11 +18,13 @@ export default class Tab {
         this.container.on('click', this.setActive.bind(this))
         
         //replace with icons...
-        let labelText = new PIXI.Text(label, textStyle);
-        labelText.rotation = -1.5708;
-        labelText.interactive = true;
-        labelText.position.set(6, this.height - 12);
-        this.container.addChild(labelText);
+        let tabIcon = new PIXI.Sprite.from(iconTexture);        
+        tabIcon.position.set(8, this.height / 3);
+        tabIcon.tint = 0x555555;
+        tabIcon.interactive = true;
+        tabIcon.name = label + "-sprite";
+        this.tabIcon = tabIcon;
+        this.container.addChild(tabIcon);
     }
 
     initSprites(sprites) {
@@ -52,6 +52,7 @@ export default class Tab {
 
     setInactive() {
         this.active = false;
+        this.tabIcon.tint = 0x555555;
         this.toggleSprites();       
     }
 
@@ -59,7 +60,12 @@ export default class Tab {
         if (!this.active) {
             this.tabSetCallback(this);
             this.active = true; 
+            this.tabIcon.tint = 0xDDDDDD;
             this.toggleSprites();
         }               
+    }
+
+    setContent(content) {
+        this.content = content;
     }
 }
