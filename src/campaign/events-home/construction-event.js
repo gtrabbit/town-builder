@@ -1,5 +1,5 @@
 import EventIndicator from '../event-indicator';
-import {eventCategories} from '../../core/constants';
+import {eventCategories} from '../../common/constants';
 import GameEvent from '../../campaign/game-event';
 
 export default class ConstructionEvent extends GameEvent{

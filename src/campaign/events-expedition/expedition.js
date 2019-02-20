@@ -1,6 +1,6 @@
 import makeEventIndicator from '../event-indicator';
 import GameEvent from '../game-event';
-import {eventCategories} from '../../core/constants';
+import {eventCategories} from '../../common/constants';
 
 	export default class Expedition extends GameEvent {
 		constructor(tile){

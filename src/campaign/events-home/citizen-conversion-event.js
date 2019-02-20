@@ -1,4 +1,4 @@
-import {eventCategories} from '../../core/constants';
+import {eventCategories} from '../../common/constants';
 import GameEvent from '../game-event';
 
 export default class CitizenConversionEvent extends GameEvent{

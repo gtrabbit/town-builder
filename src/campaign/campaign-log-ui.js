@@ -30,7 +30,7 @@ export default class EventBox {
 
     createDisplayObject(displayLayer, nextAction, previousAction, tabsetConfig) {
         this.displayLayer = displayLayer;
-        const xOffset = 100;
+        const xOffset = 64;
         const log = new PIXI.Container();
         log.height = displaySettings.displayHeight;
         log.width = displaySettings.displayWidth;
@@ -45,20 +45,19 @@ export default class EventBox {
         //fuzzy overlay
         const fuzzy = new PIXI.Graphics();
         fuzzy.beginFill(0x222222, .6);
-        fuzzy.drawRect(0, 0, xOffset, displaySettings.displayHeight);
+        fuzzy.drawRect(0, 0, displaySettings.displayWidth, displaySettings.displayHeight);
         fuzzy.endFill();
         
         fuzzy.interactive = true;
         stopClick(fuzzy);
             
         //main background image
-        const backing = new PIXI.Sprite.from(graphicalResources.misc.parchment);
-        backing.width = displaySettings.displayWidth - xOffset;
-        backing.height = displaySettings.displayHeight;
+        const backing = new PIXI.Sprite.from(graphicalResources.uiSheet.textures['book-full.png']);
+        backing.anchor.set(0, 0);
         main.addChild(backing);
     
         //set title
-        this.title = new PIXI.Text(`Day `);
+        this.title = new PIXI.Text(`Week `);
         this.title.pivot.set(this.title.width / 2, this.title.height / 2);
         this.title.position.set(main.width / 2, 25);
 
@@ -85,19 +84,17 @@ export default class EventBox {
             displayLayer.removeChild(log);
         }
         const closerUi = closer(main, closeFunction);
-        fuzzy.on('click', closeFunction);
+
 
         //add children in desired order
-        log.addChild(main, fuzzyOverlay);
+        log.addChild(fuzzyOverlay, main);
         displayLayer.addChild(log);
-
         fuzzyOverlay.addChild(fuzzy);
-
         main.addChild(this.title, nextButton, previousButton, closerUi);
         
         tabs.forEach((a, i) => {
             main.addChild(a.container);
-            a.setPosition(2, i * tabsetConfig.tabHeight);        
+            a.setPosition(36, i * (tabsetConfig.tabHeight + 8) + 128);  
         });
 
         //return

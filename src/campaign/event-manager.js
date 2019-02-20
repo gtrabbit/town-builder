@@ -1,6 +1,6 @@
 import Message from '../campaign/message';
 import EventBox from './campaign-log-ui';
-import {eventCategories} from '../core/constants';
+import {eventCategories} from '../common/constants';
 import TabsetConfig from '../common/ui-elements/tabset-config';
 import {graphicalResources} from '../main';
 
@@ -12,11 +12,10 @@ export default class EventManager {
         this.events = eventState !== undefined ? eventState.events : [];
         this.displayLayer = displayLayer;
         var tabConfigs = [
-            {icon: graphicalResources.misc.summaryIcon, category: eventCategories.summary},
-            {icon: graphicalResources.misc.newsIcon, category: eventCategories.event},
-            {icon: graphicalResources.misc.clashIcon, category: eventCategories.military},
-            {icon: graphicalResources.misc.resourceIcon, category: eventCategories.development},            
-            {icon: graphicalResources.citizens.farmer, category: eventCategories.domestic}
+            {icon: graphicalResources.uiSheet.textures['quil.png'], category: eventCategories.event},
+            {icon: graphicalResources.uiSheet.textures['sword.png'], category: eventCategories.military},
+            {icon: graphicalResources.uiSheet.textures['hammer.png'], category: eventCategories.development},            
+            {icon: graphicalResources.uiSheet.textures['potion.png'], category: eventCategories.domestic}
         ];
         var tabsetConfig = new TabsetConfig(tabConfigs, 64, 32);
         this.eventDisplay = new EventBox(this.displayLayer, this.previousEvents, this.nextEvents, tabsetConfig);

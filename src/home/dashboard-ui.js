@@ -1,6 +1,6 @@
 import Message from '../campaign/message';
 import makeDashboard from './dashboard';
-import {eventCategories} from '../core/constants';
+import {eventCategories} from '../common/constants';
 
 	export default function(){
 
