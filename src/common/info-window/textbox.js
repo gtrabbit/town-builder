@@ -14,9 +14,11 @@ import { Sprite } from 'pixi.js';
         border.endFill();
 
 
-        let textBox = new Sprite.from(graphicalResources.misc.parchment);
+        let textBox = new Sprite.from(graphicalResources.uiSheet.textures['page']);
+        textBox.anchor.set(0,0);
         textBox.height = 128;
-        textBox.width = displaySettings.displayWidth;
+        textBox.width = displaySettings.displayWidth + 36;
+        textBox.x = -12;
         
         message.position.set(20, 15);
         textBox.interactive = true;

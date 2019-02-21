@@ -3,8 +3,8 @@ import GameEvent from '../game-event';
 import {eventCategories} from '../../common/constants';
 
 	export default class Expedition extends GameEvent {
-		constructor(tile){
-			super(Math.floor(Math.sqrt(this.dangerValue)), eventCategories.military);
+		constructor(tile) {
+			super(Math.floor(Math.sqrt(tile.getDanger())), eventCategories.military);
 			this.militia = 0;
 			this.militiaAvailable = tile.grid.home.population.militiaAvailable || 0;
 			this.eventId = "ex-" + tile.UID || '99999';
@@ -13,11 +13,11 @@ import {eventCategories} from '../../common/constants';
 			this.tile = tile;
 		}
 
-		isValid(){
+		isValid() {
 			return this.militia > 0;
 		}
 
-		determineResults(){
+		determineResults() {
 			let enemy = ((this.dangerValue*2) + ~~(Math.random() * this.dangerValue) ) * 2;
 			let deaths = ~~(Math.max(enemy - this.militia*3, 0)/2);
 			return {
@@ -54,11 +54,11 @@ import {eventCategories} from '../../common/constants';
 			this.clearIndicator();
 		}
 
-		clearIndicator(){ 
+		clearIndicator() { 
 			this.indicator.remove();
 		}
 
-		calcWinPercentage(){
+		calcWinPercentage() {
 			let baseDV = this.dangerValue;
 			let DVrange = [baseDV*4, (baseDV*6)-1];
 			let lossThresh = ~~(this.militia/2) + 1;
@@ -72,7 +72,7 @@ import {eventCategories} from '../../common/constants';
 			}
 		}
 
-		resolve(){
+		resolve() {
 			let results = this.determineResults();
 			this.tile.grid.home.modifyPopulace('militia', -results.deaths);
 			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
@@ -82,7 +82,6 @@ import {eventCategories} from '../../common/constants';
 			}
 			let title = results.defeat ? "Defeat!" : "Victory!";
 			let content = [`${results.deaths} militia were lost in the battle`];
-
 			return this.createMessage(title, content);			
 		}
 	}

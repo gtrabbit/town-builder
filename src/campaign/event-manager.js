@@ -12,10 +12,10 @@ export default class EventManager {
         this.events = eventState !== undefined ? eventState.events : [];
         this.displayLayer = displayLayer;
         var tabConfigs = [
-            {icon: graphicalResources.uiSheet.textures['quil.png'], category: eventCategories.event},
-            {icon: graphicalResources.uiSheet.textures['sword.png'], category: eventCategories.military},
-            {icon: graphicalResources.uiSheet.textures['hammer.png'], category: eventCategories.development},            
-            {icon: graphicalResources.uiSheet.textures['potion.png'], category: eventCategories.domestic}
+            {icon: graphicalResources.uiSheet.textures['quil'], category: eventCategories.event},
+            {icon: graphicalResources.uiSheet.textures['sword'], category: eventCategories.military},
+            {icon: graphicalResources.uiSheet.textures['hammer'], category: eventCategories.development},            
+            {icon: graphicalResources.uiSheet.textures['shield'], category: eventCategories.domestic}
         ];
         var tabsetConfig = new TabsetConfig(tabConfigs, 64, 32);
         this.eventDisplay = new EventBox(this.displayLayer, this.previousEvents, this.nextEvents, tabsetConfig);

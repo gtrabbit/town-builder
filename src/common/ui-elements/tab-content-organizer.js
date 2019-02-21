@@ -1,15 +1,15 @@
 
 export default class TabContentOrganizer {
-    constructor(tabsetConfig) {
-        this.categories = tabsetConfig.tabConfigs.map(config => config.category);
+    constructor(tabs) {
+        this.categories = tabs.map(config => config.category);
         this.content = {};
     }
 
-    categorize(contentItem) {
+    categorize(contentItems) {
         this.categories.forEach(key => {
             this.content[key] = [];
         });
-        contentItem.forEach(e => {
+        contentItems.forEach(e => {
             this.content[e.category].push(e);
         });
         return this.content;

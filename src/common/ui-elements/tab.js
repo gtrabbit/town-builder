@@ -3,31 +3,38 @@ import {graphicalResources} from '../../main';
 export default class Tab {
     constructor(label, iconTexture, width, height) {
         this.container = new PIXI.Container();
-
+        this.category = label;
         //create tab backing images
-        let darkTexture = graphicalResources.uiSheet.textures['tab-half.png'];
-        let lightTexture = graphicalResources.uiSheet.textures['tab-full.png'];
+        let darkTexture = graphicalResources.uiSheet.textures['tab-half'];
+        let lightTexture = graphicalResources.uiSheet.textures['tab-full'];
+        let alertTexture = graphicalResources.uiSheet.textures['alert'];
+        
+        this.alert = new PIXI.Sprite.from(alertTexture);
+        
+        this.alert.visible = false;
+        this.alert.width = 24;
+        this.alert.height = 24;
+        this.alert.position.set(12, 0);
+        this.alert.tint = 0xDD2233;
+
+        
         this.active = false;
         this.inactiveSprite = new PIXI.Sprite(darkTexture);
         this.inactiveSprite.tint = 0x555555; 
         this.activeSprite = new PIXI.Sprite(lightTexture);
         this.activeSprite.name = label + "-active";
         this.inactiveSprite.name = label + '-inactive';
-        this.activeSprite.anchor.set(0, 0);
-        this.inactiveSprite.anchor.set(0, 0);
-        this.activeSprite.position.set(width * 2, 0);
-        this.inactiveSprite.rotation = Math.PI;
-        this.activeSprite.rotation = Math.PI;
+
         this.height = height;
         this.width = width;
-        this.container.addChild(this.activeSprite, this.inactiveSprite);
+        this.container.addChild(this.activeSprite, this.inactiveSprite, this.alert);
         this.container.interactive = true;
         this.container.on('click', this.setActive.bind(this))
         this.activeSprite.visible = false;
 
         //create icons
         let tabIcon = new PIXI.Sprite.from(iconTexture);
-        tabIcon.position.set(-width, -height / 2);
+        tabIcon.position.set(16, 0);
         tabIcon.tint = 0x555555;
         tabIcon.interactive = true;
         tabIcon.name = label + "-sprite";
@@ -59,6 +66,7 @@ export default class Tab {
     }
 
     setActive() {
+       // this.alert.visible = false;
         if (!this.active) {
             this.tabSetCallback(this);
             this.active = true; 
@@ -69,5 +77,9 @@ export default class Tab {
 
     setContent(content) {
         this.content = content;
+    }
+
+    setAlert() {
+        this.alert.visible = true;
     }
 }

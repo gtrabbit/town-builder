@@ -57,14 +57,13 @@ const style = styles('basic');
 						winPropMsg.text = winChance === null ? "You must send at least one militia" : "Hope of Victory: " + (winChance * 100) + "%";			
 					}
 		
-					increase.on('click', ()=>{
+					increase.on('click', () => {
 						if (expedition.militiaAvailable > 0){
 							adjustMilitiaDisplay(1);
 							updateWinChance(expedition.adjustMilitia(1));					
 						}
-						
 					});
-					decrease.on('click', ()=>{
+					decrease.on('click', () => {
 						if (expedition.militia > 0){
 							adjustMilitiaDisplay(-1);
 							updateWinChance(expedition.adjustMilitia(-1));
@@ -81,11 +80,11 @@ const style = styles('basic');
 					confirmation.buttonMode = true;
 					confirmation.on('click', ()=>{
 						expedition.confirmExpedition();
-					})
+					});
 		
 					messageContainer.addChild(
 						questionMsg, militiaCommited, militiaAvailableMsg,
-						adBox, winPropMsg, durationMsg, confirmation)
+						adBox, winPropMsg, durationMsg, confirmation);
 		
 					questionMsg.position.set(0, 20);
 					militiaAvailableMsg.position.set(0, 80);
@@ -94,10 +93,9 @@ const style = styles('basic');
 					winPropMsg.position.set(20, 120);
 					durationMsg.position.set(20, 140);
 					confirmation.position.set(20, 170);
-					}
+				}
 
-					return messageContainer
-			
+				return messageContainer;
 			}
 		}
 	}

@@ -5,24 +5,21 @@ import {graphicalResources} from '../main';
 import stopClick from '../common/utils/stop-click-bubble-down';
 import closer from '../common/ui-elements/closer';
 import pop from '../common/animations/generic-pop';
-import TabOrganizer from './tab-content-organizer';
+
 
 
 //return a PIXI.Container()
 export default class EventBox {
     constructor(displayLayer, nextAction, previousAction, tabsetConfig) {
+        this.unitOfTime = "Week";
         this.container = this.createDisplayObject(displayLayer, nextAction, previousAction, tabsetConfig);
-        this.tabOrganizer = new TabOrganizer(tabsetConfig);
     }
 
     showEventResults(events, turnNumber, isCurrentTurn) {
         //title
-        this.title.text = this.title.text.slice(0, 4).concat(turnNumber);
-        this.tabSet.tabs[0].setActive();
-        var sortedEvents = this.tabOrganizer.categorize(events);
-        console.log(sortedEvents); 
-        
-        
+        this.title.text = this.title.text.slice(0, this.unitOfTime.length + 1).concat(turnNumber);
+        this.tabSet.updateContent(events);
+        console.log(this.main);
         
         //add object to displayLayer -- do this last
         this.displayLayer.addChild(this.container);
@@ -52,14 +49,14 @@ export default class EventBox {
         stopClick(fuzzy);
             
         //main background image
-        const backing = new PIXI.Sprite.from(graphicalResources.uiSheet.textures['book-full.png']);
+        const backing = new PIXI.Sprite.from(graphicalResources.uiSheet.textures['book-full']);
         backing.anchor.set(0, 0);
         main.addChild(backing);
     
         //set title
-        this.title = new PIXI.Text(`Week `);
+        this.title = new PIXI.Text(`${this.unitOfTime} `);
         this.title.pivot.set(this.title.width / 2, this.title.height / 2);
-        this.title.position.set(main.width / 2, 25);
+        this.title.position.set(232, 100);
 
         //next / previous buttons
         //Make this configurable?
@@ -75,26 +72,28 @@ export default class EventBox {
         this.nextButton.on('click', nextAction);
 
         //create tabs
+        const textArea = new PIXI.Container();
         const tabs = tabsetConfig.tabConfigs.map(config => new Tab(config.category, config.icon, tabsetConfig.tabWidth, tabsetConfig.tabHeight));
-        this.tabSet = new TabSet(tabs);
+        this.tabSet = new TabSet(tabs, textArea);
         this.main = main;
+        textArea.position.set(56, this.main.height / 3);
 
         //create closer
         const closeFunction = () => {
             displayLayer.removeChild(log);
         }
         const closerUi = closer(main, closeFunction);
-
+        fuzzy.on('click', closeFunction);
 
         //add children in desired order
         log.addChild(fuzzyOverlay, main);
         displayLayer.addChild(log);
         fuzzyOverlay.addChild(fuzzy);
-        main.addChild(this.title, nextButton, previousButton, closerUi);
+        main.addChild(this.title, nextButton, previousButton, closerUi, textArea);
         
         tabs.forEach((a, i) => {
             main.addChild(a.container);
-            a.setPosition(36, i * (tabsetConfig.tabHeight + 8) + 128);  
+            a.setPosition(-36, i * (tabsetConfig.tabHeight + 8) + 120);  
         });
 
         //return

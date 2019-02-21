@@ -42,6 +42,7 @@ import {displaySettings} from '../../core/settings';
             
             //Make the closer (little x in corner)
             const closer = makeCloser(infoWindow, infoWindow.close);
+            closer.x -= 32;
             textbox.addChild(closer);
 
             //add the infowindow to the view
