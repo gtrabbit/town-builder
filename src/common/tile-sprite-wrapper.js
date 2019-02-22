@@ -1,3 +1,5 @@
+import textureLegend from './texture-legend';
+
 export default class TileSpriteWrapper {
     constructor(container, primarySprite, secondarySprite) {
         this.container = container;
@@ -6,6 +8,7 @@ export default class TileSpriteWrapper {
         this.x = container.x;
         this.y = container.y;
         this.previousTints = [];
+        this.dangerIndicator = null
     }
 
     getContainer() {
@@ -33,8 +36,25 @@ export default class TileSpriteWrapper {
         this.container.children.forEach(sprite => {sprite.tint = 0x777777;});
     }
 
-    illumine() {
-        this.container.children.forEach(sprite => {sprite.tint = 0xDDDDDD;});
+    illumine(isCivicTile) {
+        const value = isCivicTile ? 0xFFFFFF : 0xBBBBBB;
+        this.container.children.forEach(sprite => { if(!sprite.skipIllumine) sprite.tint = value;});
+    }
+
+    setTintForTileByCurrentThreat(currentThreat) {
+        const alphaValue = 1 / Math.max((32 - Math.max(currentThreat, 0)), 1);
+
+        if (alphaValue > 0.1) {
+            if (!this.dangerIndicator) {
+                this.dangerIndicator = textureLegend('glass-circle');
+                this.dangerIndicator.skipIllumine = true;
+                this.dangerIndicator.height = this.container.height;
+                this.dangerIndicator.width = this.container.width;
+                this.dangerIndicator.tint = 0x8B1111;
+                this.container.addChild(this.dangerIndicator);
+            }
+            this.dangerIndicator.alpha = alphaValue;
+        } 
     }
 
     enableInteraction() {

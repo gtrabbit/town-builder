@@ -9,7 +9,7 @@ import pop from '../common/animations/generic-pop';
 
 
 //return a PIXI.Container()
-export default class EventBox {
+export default class TabbedUIWindow {
     constructor(displayLayer, nextAction, previousAction, tabsetConfig) {
         this.unitOfTime = "Week";
         this.container = this.createDisplayObject(displayLayer, nextAction, previousAction, tabsetConfig);
@@ -19,7 +19,6 @@ export default class EventBox {
         //title
         this.title.text = this.title.text.slice(0, this.unitOfTime.length + 1).concat(turnNumber);
         this.tabSet.updateContent(events);
-        console.log(this.main);
         
         //add object to displayLayer -- do this last
         this.displayLayer.addChild(this.container);
@@ -60,11 +59,11 @@ export default class EventBox {
 
         //next / previous buttons
         //Make this configurable?
-        const nextButton = new PIXI.Sprite.from(graphicalResources.misc.arrow);
-        const previousButton = new PIXI.Sprite.from(graphicalResources.misc.arrow);
-        resizeButton(nextButton, true);
+        const nextButton = new PIXI.Sprite.from(graphicalResources.uiSheet.textures['forward-arrow']);
+        const previousButton = new PIXI.Sprite.from(graphicalResources.uiSheet.textures['back-arrow']);
+        resizeButton(nextButton);
         resizeButton(previousButton);
-        nextButton.position.set(this.title.x + this.title.width + 10, this.title.y);
+        nextButton.position.set(this.title.x + this.title.width - (nextButton.width / 2), this.title.y);
         previousButton.position.set(this.title.x - 50, this.title.y);
         this.nextButton = nextButton;
         this.previousButton = previousButton;
@@ -82,7 +81,7 @@ export default class EventBox {
         const closeFunction = () => {
             displayLayer.removeChild(log);
         }
-        const closerUi = closer(main, closeFunction);
+        const closerUi = closer(main, closeFunction, {x: 200, y: 42});
         fuzzy.on('click', closeFunction);
 
         //add children in desired order
@@ -91,6 +90,7 @@ export default class EventBox {
         fuzzyOverlay.addChild(fuzzy);
         main.addChild(this.title, nextButton, previousButton, closerUi, textArea);
         
+        //add tabs now, to keep them on top
         tabs.forEach((a, i) => {
             main.addChild(a.container);
             a.setPosition(-36, i * (tabsetConfig.tabHeight + 8) + 120);  
@@ -101,11 +101,10 @@ export default class EventBox {
     }
 }
 
-function resizeButton(button, rotate) {
+function resizeButton(button) {
     button.height = 16;
     button.width = 16;
     button.anchor.set(0.5, 0.5);
-    button.rotation = rotate ? Math.PI : 0;
     button.interactive = true;
     button.buttonMode = true;
     pop(button);

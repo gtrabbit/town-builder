@@ -12,7 +12,7 @@ import buildingInfoWindow from './common/building-info-ui';
 
         getBenefits(type){
             if (type){
-                return this.benefits[type];
+                return this.benefits[type] || 0;
             } else {
                 return this.benefits;
             }

@@ -1,4 +1,5 @@
 import {assignSprite} from './terrain-subtype-selector';
+import terrainProperties from './terrain-properties';
 
 export default class Terrain {
     constructor(tile, terrainTypeName) {
@@ -7,10 +8,33 @@ export default class Terrain {
         this.associatedMountainRange = null;
         this.secondaryTerrainTypeName = null;
         this.hasSecondaryTerrainSubtype = false;
+        this.propsSet = false;
     }
 
     getSpriteId() {
         return this.spriteName;
+    }
+
+    setProps() {
+        if (this.propsSet) return;
+        const props = terrainProperties(this);
+        for (let key in props) {
+            if (props.hasOwnProperty(key)) {
+                this[key] = props[key];
+            }
+        }
+        this.propsSet = true;
+    }
+
+    get defenseBonus() {
+        if (!this.propsSet) {
+            this.setProps();
+        }
+        return this._defenseBonus;
+    }
+
+    set defenseBonus(value) {
+        this._defenseBonus = value;
     }
 
     getSecondaryTerrainSpriteId() {

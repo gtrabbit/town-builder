@@ -4,7 +4,7 @@ import makeSettings from './core/settings';
 import './styles/styles.scss';
 import loadAssets from './core/load-assets';
 
-export const graphicalResources = {misc: {}};
+export var graphicalResources = {};
 
 load();
 
@@ -13,7 +13,6 @@ function load() {
 }
 
 function startup(resources){
-
 	//have a UI element to decide this, or load from a DB
 	const isNewGame = true;
 	let state = {};

@@ -159,8 +159,8 @@ import DefenseManager from './defense/defense-manager';
 			const oldPopulation = this.getAllPopulation();
 			let popDef = 0;
 			let gain = {};
-			for (let citizenType in oldPopulation){
-				if (citizenType !== 'militiaAvailable'){
+			for (let citizenType in oldPopulation) {
+				if (citizenType !== 'militiaAvailable') {
 					for (let x = 0; x < oldPopulation[citizenType]; x++) {
 						let citizen = this.populationManager.getCitizenTypes(citizenType);
 						if (this.extractCost(citizen.getCosts())) {
@@ -182,7 +182,7 @@ import DefenseManager from './defense/defense-manager';
 			//feels dirty because basically we're pushing resolved events...
 			this.display.summarizeGrowth(compareObjects(oldResources, this.resources), compareObjects(oldPopulation, this.population))
 				.forEach(a=>this.game.addEvent(a));
-			this.defenseManager.determineLosses(popDef);
+			this.defenseManager.determineLosses(this.territory, popDef);
 			this.buildingManager.update();
 			this.updateDisplay();
 		}
@@ -209,11 +209,6 @@ import DefenseManager from './defense/defense-manager';
 			const state = {home: this.extractState()};
 			return this.buildingManager.getBuildingsAvailableToBuild(state);
 		}
-
-		modifyDefense(newValue) {
-			return this.defenseManager.modifyDefense();
-		}
-
 	}
 
 

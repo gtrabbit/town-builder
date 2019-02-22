@@ -5,7 +5,8 @@
     export default function(a, b){
         let results = {};
         for (let key in b){
-            if (key !== 'militiaAvailable') results[key] = b[key] - a[key];
+            let change = b[key] - a[key];
+            if (key !== 'militiaAvailable' && key !== 'popGrowth' && change !== 0) results[key] = change;
         }
         return results;
     }

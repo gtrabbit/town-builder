@@ -1,6 +1,6 @@
 import Square from '../map/square';
 import Expedition from '../campaign/events-expedition/expedition';
-import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this should be called via the expedition, not the tile
+import MakeExpeditionUIWindow from '../campaign/events-expedition/expedition-ui'; //but this should be called via the expedition, not the tile
 	export default class Wilds extends Square{
 			constructor(x, y, grid, terrain, growthRate){
 				super(x, y, grid, terrain);
@@ -20,6 +20,7 @@ import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this s
 			}
 
 			takeTurn(turnNumber){
+				this.terrain.setProps();
 				const someKindaDifficultyConstant = 10;
 				if (!this.expedition.confirmed){
 					this.expedition = {};
@@ -30,8 +31,7 @@ import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this s
 					let square = this.grid.getTile(a[0], a[1]);
 					chance += square.getDanger();	
 					})
-				if (this.terrain.typeName === 'hills') chance * 6;
-				if (this.terrain.typeName === 'forest') chance * 4;
+				chance *= this.terrain.dangerModifier;					
 				if (chance > (Math.random() * (this.growthRate * 5)) + (someKindaDifficultyConstant - (turnNumber / 10))){
 					this.setDanger(this.getDanger() + value);
 				} 
@@ -68,7 +68,7 @@ import MakeExpeditionUIWindow from '../home/defense/expedition-ui'; //but this s
 
 			render(){ 
 				if (this.isExplored) {
-					this.ui.illumine();
+					this.ui.illumine(false);
 					this.ui.enableInteraction();
 				} else {
 					this.ui.dim();

@@ -3,7 +3,6 @@ import Terrain from './terrain';
 
 	export default class Square {
 		constructor(x, y, grid, terrain){
-
 			this.x = x;
 			this.y = y;
 			this.UID = "" + x + y;

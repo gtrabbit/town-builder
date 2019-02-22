@@ -20,14 +20,23 @@ export default class TabSet {
         this.contentContainer.removeChildren();
         const content = this.content[tab.category];
         let yPos = 0;
-        content.forEach((message, index) => {
+        content.forEach(message => {
+            if (message.hasOwnProperty("graphicalSummary")) {
+                let xPos = 0;
+                message.graphicalSummary.icons.forEach(icon => {
+                    this.contentContainer.addChild(icon);
+                    icon.position.set(xPos, yPos);
+                    xPos += icon.width;
+                });
+                yPos += 16;
+            }
             yPos += 24;
             const wrapper = new PIXI.Container();
             const title = new TextWrapper(message.title);
             title.ui.position.set(0, yPos);
             const sentences = message.contents.map(c => new TextWrapper(c));
             wrapper.addChild(title.ui);            
-            sentences.forEach((s,i) => {
+            sentences.forEach(s => {
                 yPos += 16;
                 wrapper.addChild(s.ui);
                 s.ui.position.set(16, yPos);

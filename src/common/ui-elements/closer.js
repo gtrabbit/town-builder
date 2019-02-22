@@ -1,15 +1,15 @@
-import closerButton from '../../../assets/close-button.png';
+import {graphicalResources} from '../../main';
 
-    export default function(container, closingFunction){
-        const closer = new PIXI.Sprite.fromImage(closerButton);
+    export default function(container, closingFunction, margins){
+        const closeTexture = graphicalResources.uiSheet.textures['close'];
+        const closer = new PIXI.Sprite.from(closeTexture);
         closer.interactive = true;
         closer.buttonMode = true;
         closer.on('click', () => {
             closingFunction();
         });
         const size = container.getBounds();
-        closer.tint = 0x222222;
-        closer.position.set(size.width - 32, 8);
+        closer.position.set(size.width - margins.x, margins.y);
         closer.height = 24;
         closer.width = 24;
         return closer;

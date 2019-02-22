@@ -1,10 +1,9 @@
-import Message from '../campaign/message';
 import EventBox from './campaign-log-ui';
 import {eventCategories} from '../common/constants';
 import TabsetConfig from '../common/ui-elements/tabset-config';
 import {graphicalResources} from '../main';
 
-const welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!'], eventCategories.summary);
+//const welcomeMessage = new Message('Welcome!', ['Hello, and welcome to the game!'], eventCategories.summary);
 
 export default class EventManager {
     constructor(eventState, displayLayer) {
@@ -12,10 +11,10 @@ export default class EventManager {
         this.events = eventState !== undefined ? eventState.events : [];
         this.displayLayer = displayLayer;
         var tabConfigs = [
-            {icon: graphicalResources.uiSheet.textures['quil'], category: eventCategories.event},
-            {icon: graphicalResources.uiSheet.textures['sword'], category: eventCategories.military},
-            {icon: graphicalResources.uiSheet.textures['hammer'], category: eventCategories.development},            
-            {icon: graphicalResources.uiSheet.textures['shield'], category: eventCategories.domestic}
+            {icon: graphicalResources.uiSheet.textures['crow-small'], category: eventCategories.event},
+            {icon: graphicalResources.uiSheet.textures['victory-spear-small'], category: eventCategories.military},
+            {icon: graphicalResources.uiSheet.textures['hammer-small'], category: eventCategories.development},            
+            {icon: graphicalResources.uiSheet.textures['bread-small'], category: eventCategories.domestic}
         ];
         var tabsetConfig = new TabsetConfig(tabConfigs, 64, 32);
         this.eventDisplay = new EventBox(this.displayLayer, this.previousEvents, this.nextEvents, tabsetConfig);

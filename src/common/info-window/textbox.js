@@ -13,10 +13,9 @@ import { Sprite } from 'pixi.js';
         border.drawRect(0, 0, displaySettings.displayWidth, 3);
         border.endFill();
 
-
         let textBox = new Sprite.from(graphicalResources.uiSheet.textures['page']);
         textBox.anchor.set(0,0);
-        textBox.height = 128;
+        textBox.height = message.height + 15;
         textBox.width = displaySettings.displayWidth + 36;
         textBox.x = -12;
         

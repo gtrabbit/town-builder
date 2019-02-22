@@ -12,6 +12,20 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 			this.home = grid.home;
 		}
 
+		getDefense() {
+			const buildingModifier = this.building ? this.building.getBenefits('defense') : 0;
+			const terrainModifier = this.terrain.defenseBonus;
+			return terrainModifier + buildingModifier;
+		}
+
+		setThreatLevel(value) {
+			this.threatLevel = value;
+		}
+
+		getCurrentThreat() {
+			return Math.max(this.threatLevel - this.getDefense());
+		}
+
 		build(building){
 			if (this.canBuild(building)){
 				this.ongoingConstruction = true;
@@ -23,9 +37,7 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 
 		//pays the price if possible and returns true, otherwise returns false
 		canBuild(buildingType, level = 0){
-			return this.home
-				.extractCost(this.home.getBuildingCost(buildingType, level) 
-			);
+			return this.home.extractCost(this.home.getBuildingCost(buildingType, level));
 		}
 
 		upgrade(buildingType, level) {
@@ -69,19 +81,23 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 		}
 		
 		takeTurn(){
+			this.terrain.setProps()
 			this.render();
 			if (this.building) {
 				this.building.takeTurn();
 			}
 		}
+
 		render(){
 			this.getNeighbors().forEach(a=>{
 				let tile = this.grid.getTile(a[0], a[1]);
 				if (tile.type === 'wilds') {
 					tile.markAsExplored();
+					this.isOnEdgeOfTown = true;
 				}
 			})
-			this.ui.illumine();
+			this.ui.illumine(true);
+			this.ui.setTintForTileByCurrentThreat(this.getCurrentThreat());
 		}
 	}
 

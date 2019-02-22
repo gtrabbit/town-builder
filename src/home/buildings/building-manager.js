@@ -67,8 +67,6 @@ import invertSign from '../../common/utils/invert-sign';
             const removed = this.buildings[buildingType].splice(this.buildings[buildingType].findIndex(a => a.UID === buildingUID), 1)[0];
             const lostCapBenefits = invertSign(removed.getBenefits('caps'));
             this.home.modifyPopulationCaps(lostCapBenefits);
-            const lostDefenseBenefits = removed.getBenefits('defense') * -1;
-            this.home.modifyDefense(lostDefenseBenefits);
             return removed;
         }
 
@@ -90,9 +88,6 @@ import invertSign from '../../common/utils/invert-sign';
             const benefits = building.getBenefits();
             if (benefits.hasOwnProperty('caps')) {
                 this.home.modifyPopulationCaps(benefits.caps);
-            }
-            if (benefits.hasOwnProperty('defense')) {
-                this.home.modifyDefense(benefits.defense);
             }
             return building;
         }

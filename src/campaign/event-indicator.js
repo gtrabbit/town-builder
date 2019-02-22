@@ -1,4 +1,4 @@
-import expeditionIndicator from '../home/defense/expedition-indicator';
+import expeditionIndicator from './events-expedition/expedition-indicator';
 import constructionIndicator from '../home/buildings/common/construction-indicator';
     export default function(type, tile){
         

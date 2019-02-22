@@ -37,11 +37,11 @@ import {displaySettings} from '../../core/settings';
             //when the infowindow is removed
             if (selectedTile){
                 setListeners(selectedTile, messageContainer.onDismiss);  
-            } 
-            infoWindow.position.set(0, displaySettings.displayHeight - 128);
+            }
+            infoWindow.position.set(0, displaySettings.displayHeight - textbox.height);
             
             //Make the closer (little x in corner)
-            const closer = makeCloser(infoWindow, infoWindow.close);
+            const closer = makeCloser(infoWindow, infoWindow.close, {x: 36, y: 12});
             closer.x -= 32;
             textbox.addChild(closer);
 

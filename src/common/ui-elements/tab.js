@@ -1,22 +1,16 @@
 import {graphicalResources} from '../../main';
+import buildAlert from './alert';
 
 export default class Tab {
     constructor(label, iconTexture, width, height) {
         this.container = new PIXI.Container();
         this.category = label;
         //create tab backing images
-        let darkTexture = graphicalResources.uiSheet.textures['tab-half'];
-        let lightTexture = graphicalResources.uiSheet.textures['tab-full'];
-        let alertTexture = graphicalResources.uiSheet.textures['alert'];
-        
-        this.alert = new PIXI.Sprite.from(alertTexture);
-        
-        this.alert.visible = false;
-        this.alert.width = 24;
-        this.alert.height = 24;
-        this.alert.position.set(12, 0);
-        this.alert.tint = 0xDD2233;
+        const darkTexture = graphicalResources.uiSheet.textures['tab-half'];
+        const lightTexture = graphicalResources.uiSheet.textures['tab-full'];
 
+        //create alert
+        this.alert = buildAlert();
         
         this.active = false;
         this.inactiveSprite = new PIXI.Sprite(darkTexture);
@@ -27,19 +21,21 @@ export default class Tab {
 
         this.height = height;
         this.width = width;
-        this.container.addChild(this.activeSprite, this.inactiveSprite, this.alert);
+
         this.container.interactive = true;
         this.container.on('click', this.setActive.bind(this))
         this.activeSprite.visible = false;
 
         //create icons
         let tabIcon = new PIXI.Sprite.from(iconTexture);
+        tabIcon.height = height;
+        tabIcon.width = width;
         tabIcon.position.set(16, 0);
         tabIcon.tint = 0x555555;
         tabIcon.interactive = true;
         tabIcon.name = label + "-sprite";
-        this.tabIcon = tabIcon;
-        this.container.addChild(tabIcon);
+        this.tabIcon = tabIcon;        
+        this.container.addChild(this.activeSprite, this.inactiveSprite, tabIcon, this.alert);
     }
 
 
@@ -66,7 +62,7 @@ export default class Tab {
     }
 
     setActive() {
-       // this.alert.visible = false;
+        this.alert.visible = false;
         if (!this.active) {
             this.tabSetCallback(this);
             this.active = true; 

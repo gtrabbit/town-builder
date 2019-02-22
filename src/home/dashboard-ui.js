@@ -40,8 +40,8 @@ import {eventCategories} from '../common/constants';
 			if (popSummaries.length < 1){
 				popSummaries.push('Nothing new to report');
 			}
-			return [new Message('Treasurer\'s Log:', resSummaries, eventCategories.domestic),
-				new Message('Office of the Census:', popSummaries, eventCategories.domestic)]
+			return [new Message('Treasurer\'s Log:', resSummaries, eventCategories.domestic, resChanges),
+				new Message('Office of the Census:', popSummaries, eventCategories.domestic, popChanges)];
 		}
 
 		return {
