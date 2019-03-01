@@ -27,6 +27,7 @@
     "webpack-dev-server": "^3.1.13"
   },
   "dependencies": {
+    "express": "^4.16.4",
     "pixi.js": "^4.8.4"
   }
 }
