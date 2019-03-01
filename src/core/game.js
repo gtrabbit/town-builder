@@ -5,14 +5,14 @@ import makeTextBox from '../common/info-window/textbox';
 import EventManager from '../campaign/event-manager';
 
 	export default class Game{
-		constructor(state, screenWidth, screenHeight, stage, renderer, animationHook){
+		constructor(state, settings, stage, renderer, animationHook){
 
 			//=========PIXI essentials===========//
 			this.stage = stage;
 			this.renderer = renderer;
 			this.animationHook = animationHook;
-			this.screenWidth = screenWidth;
-			this.screenHeight = screenHeight;
+			this.displayWidth = settings.displayWidth;
+			this.displayHeight = settings.displayHeight;
 
 			//===========Constants============//
 			
@@ -24,7 +24,7 @@ import EventManager from '../campaign/event-manager';
 			this.floatLayer = new PIXI.Container();
 			this.tileLayer = new PIXI.Container();
 			this.buildingLayer = new PIXI.Container();
-			this.map = MapUI(state.width, state.height, this.squareSize, screenWidth, screenHeight);
+			this.map = MapUI(state.width, state.height, this.squareSize, this.displayWidth, this.displayHeight);
 			this.floatLayer.name = 'floatLayer';
 			this.campaignLogLayer.name = 'campaignLogLayer';
 			this.overlays.name = 'overlays';
@@ -32,16 +32,17 @@ import EventManager from '../campaign/event-manager';
 			this.tileLayer.name = 'tileLayer';
 			this.buildingLayer.name = 'buildingLayer';
 
-			//============State=================//
+			//============State / Settings=================//
 			this.state = {
-				growthRate: state.growthRate,
+				difficulty: state.difficulty,
 				width: state.width,
 				height: state.height,
 				turns: state.turns || 0,
 				eventState: state.eventState || {}				
 			};
-			this.startingResources = state.startingResources;
-			this.startingPopulation = state.startingPopulation;
+
+			this.settings = settings;
+			
 
 // we extractState() from grid, so this is not techincally part of state, since grid has logic and the state should only be data
 			this.grid = !state.grid ? new Grid(this) : new Grid(this, state.grid);

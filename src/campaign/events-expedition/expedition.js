@@ -78,7 +78,7 @@ import {eventCategories} from '../../common/constants';
 			this.tile.grid.home.modifyPopulace('militiaAvailable', this.militia);
 			this.clearIndicator();
 			if (!results.defeat){
-				this.tile.convertMe();
+				this.tile.convertToCivic();
 			}
 			let title = results.defeat ? "Defeat!" : "Victory!";
 			let content = [`${results.deaths} militia were lost in the battle`];

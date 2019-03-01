@@ -7,23 +7,29 @@ import citizenManagerDisplay from './citizens/citizen-management-ui';
 import BuildingManager from './buildings/building-manager';
 import TileFactory from '../map/tile-factory';
 import PopulationManager from './citizens/citizen-manager';
-import Construction from '../campaign/events-home/construction-event';
+import ConstructionEvent from '../campaign/events-home/construction-event';
 import DefenseManager from './defense/defense-manager';
 
 	export default class Home {
-		constructor(grid, startingResources, startingPopulation, popGrowth, territory){
-			this.territory = territory || [];
-			this.resources = startingResources;
+		constructor(grid, settings, savedHomeState){
+			if (savedHomeState) {
+				this.resources.popGrowth = savedHomeState.resources.popGrowth;
+				this.population = savedHomeState.population;
+				this.population.militiaAvailable = savedHomeState.militiaAvailable;
+			} else {
+				this.territory = [];
+				this.resources = settings.startingResources;
+				this.population = settings.startingPopulation;
+				this.population.militiaAvailable = settings.startingPopulation.militia;
+			}
 			this.grid = grid;
 			this.game = grid.game;
-			this.population = startingPopulation;
-			this.population.militiaAvailable = startingPopulation.militia;
 			this.display = homeDisplay();
-			this.citizenManagerDisplay = citizenManagerDisplay(this.game.screenWidth, this.game.screenHeight,
+			this.citizenManagerDisplay = citizenManagerDisplay(this.game.settings.displayWidth, this.game.settings.displayHeight,
 				this.convertCitizen.bind(this), this.disband.bind(this));
 			this.buildingManager = new BuildingManager(this);		
-			this.populationManager = new PopulationManager(this, startingPopulation);
-			this.defenseManager = new DefenseManager(this);
+			this.populationManager = new PopulationManager(this, settings.startingPopulation);
+			this.defenseManager = new DefenseManager(this, this.game.settings.difficulty);
 		}
 
 		extractState(){
@@ -35,7 +41,11 @@ import DefenseManager from './defense/defense-manager';
 			}
 		}
 
-		init(homeStart, homeEnd) { //consider following comment on line 53 now that this is here...
+		getTerritory() {
+			return this.territory;
+		}
+
+		init(homeStart, homeEnd) { 
 			this.game.overlays.addChild(this.display.container, this.citizenManagerDisplay);
 			this.setInitialTerritory(homeStart, homeEnd);
 			this.setInitialBuildings();
@@ -44,10 +54,7 @@ import DefenseManager from './defense/defense-manager';
 		setInitialTerritory(homeStart, homeEnd){
 			for (let x = homeStart[0]; x <= homeEnd[0]; x++) {
 				for (let y = homeStart[1]; y <= homeEnd[1]; y++) {
-					let starter = TileFactory( 
-						'civic', x, y, this.grid, this.grid.rows[x][y].terrain, null, true);
-					this.grid.replaceTile(x, y, starter)
-					this.territory.push(starter); //any call subsequent to this should use public method--not doing so here, because we don't want to call render() yet
+					this.grid.getTile(x, y).convertToCivic();
 				}
 			}
 		}
@@ -182,7 +189,8 @@ import DefenseManager from './defense/defense-manager';
 			//feels dirty because basically we're pushing resolved events...
 			this.display.summarizeGrowth(compareObjects(oldResources, this.resources), compareObjects(oldPopulation, this.population))
 				.forEach(a=>this.game.addEvent(a));
-			this.defenseManager.determineLosses(this.territory, popDef);
+			const lossModel = this.defenseManager.determineLosses(popDef);
+			this.populationManager.handleDeaths(lossModel.casualityCount)
 			this.buildingManager.update();
 			this.updateDisplay();
 		}
@@ -193,8 +201,8 @@ import DefenseManager from './defense/defense-manager';
 		}
 
 		startConstruction(buildingType, tile, level, isUpgrade) {
-			const building = this.buildingManager.startConstruction(buildingType, tile, level, isUpgrade);
-			return this.game.addEvent(new Construction(building, tile, isUpgrade));
+			const building = this.buildingManager.startConstruction(buildingType, tile, level);
+			return this.game.addEvent(new ConstructionEvent(building, tile, isUpgrade));
 		}
 		
 		getBuildingCost(buildingType, level) {

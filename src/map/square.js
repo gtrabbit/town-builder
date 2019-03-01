@@ -1,5 +1,6 @@
 import makeTileUI from './base-tile-ui';
 import Terrain from './terrain';
+import TerrainSubtypeModel from './terrain-subtype-model';
 
 	export default class Square {
 		constructor(x, y, grid, terrain){
@@ -62,10 +63,24 @@ import Terrain from './terrain';
 			this.terrain = new Terrain(this, terrainTypeName);
 			if (setSubtype) this.setTerrainSubtype();
 			if (isReplacement) {
+				this.terrain.setSubtype();
 				this.getNeighborTiles().forEach(tile => {
 					tile && tile.setSprite();
 				})
 			}
+		}
+
+		setTerrainNoValidation(terrainTypeName, terrainSubtypeName) {
+			if (this.terrain && terrainTypeName === this.terrain.typeName && this.terrain.subtypeName === terrainSubtypeName) return; 
+			this.terrain = new Terrain(this, terrainTypeName);
+			
+			this.terrain.setSubtypeName(terrainSubtypeName);
+			const subtypeModel = new TerrainSubtypeModel();
+			subtypeModel.makeMeAField();
+			this.terrain.setSprite(subtypeModel);
+			this.getNeighborTiles().forEach(tile => {
+				tile && tile.setSprite();
+			});
 		}
 
 		setSecondaryTerrainType(typeName) {

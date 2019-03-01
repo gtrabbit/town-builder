@@ -21,7 +21,7 @@ import sumObjects from '../../common/utils/sum-objects';
 				militaryCapacity: 0,
 				citizenCapacity: 0
 			};
-
+			this.casualtySelectionMap = [['militiaAvailable'], ['woodsmen', 'farmers'], ['commoners', 'artisans']];
 		}
 
 		getCitizenTypes(type) {
@@ -107,6 +107,29 @@ import sumObjects from '../../common/utils/sum-objects';
 				return true;
 			}
 			return false;			
+		}
+
+		handleDeaths(count) {
+			console.log("new loop with losses at: ", count);
+			while (count > 0) {
+				let collectionResultedInLoss = false;
+				this.casualtySelectionMap.forEach(collection => {
+					if (collectionResultedInLoss) return;
+					collection.forEach(typeName => {
+						for (let x = 1; x <= this.population[typeName]; x++) {
+							console.log(typeName + " : " + this.population[typeName]);
+							if (Math.random() > 0.6) {
+								console.log(typeName + " dies");
+								this.population[typeName]--;
+								count--;
+								collectionResultedInLoss = true;
+								return;
+							}
+						}
+					});
+				});
+			}
+
 		}
 
         update(turnNumber) {

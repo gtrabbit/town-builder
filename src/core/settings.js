@@ -2,15 +2,27 @@
     const difficultySettings = {
         'easy': {
             startingResources: { 'food': 20, 'wood': 40, 'silver': 50, 'popGrowth': 0 },
-            startingPopulation: { 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 }   
+            startingPopulation: { 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 },
+            difficulty: {
+                growthRate: 1,
+                lossChance: 2
+            } 
         },
         'medium': {
             startingResources: {'food': 20, 'wood': 40, 'silver': 50, 'popGrowth': 0},
-            startingPopulation: {'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1}   
+            startingPopulation: {'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1},
+            difficulty: {
+                growthRate: 2,
+                lossChance: 4
+            }  
         },
         'hard': {
             startingResources: { 'food': 20, 'wood': 40, 'silver': 50, 'popGrowth': 0 },
-            startingPopulation: { 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 }   
+            startingPopulation: { 'farmers': 2, 'militia': 2, 'militiaAvailable': 2, 'artisans': 1, 'commoners': 2, 'woodsmen': 1 },
+            difficulty: {
+                growthRate: 3,
+                lossChance: 6
+            } 
         } 
     };
 

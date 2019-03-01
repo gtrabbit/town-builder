@@ -1,7 +1,6 @@
 import Home from '../home/home';
 import TerrainGenerator from './terrain-generator';
 import TileFactory from './tile-factory';
-import Terrain from './terrain';
 
 
 export default class Grid{
@@ -9,7 +8,7 @@ export default class Grid{
 		this.height = game.state.height;
 		this.width = game.state.width;
 		this.homeStart = [~~(this.width / 2) - 1, ~~(this.height / 2) - 1];
-		this.growthRate = game.state.growthRate;
+		this.growthRate = game.state.difficulty.growthRate;
 		this.game = game;
 		this.squareSize = game.squareSize;
 		if (!savedGrid){
@@ -17,7 +16,7 @@ export default class Grid{
 			this.buildMap();
 		} else {
 			this.rows = savedGrid.rows;
-			this.home = new Home(this, savedGrid.home.resources, savedGrid.home.population, savedGrid.home.popGrowth, savedGrid.home.territory);
+			this.home = new Home(this, this.game.settings, savedGrid.home);
 		}
 
 		this.game.map.homeLocation = this.homeStart;
@@ -35,15 +34,15 @@ export default class Grid{
 		return this.rows[x][y];
 	}
 
-	convertTile(targetType, x, y, terrain){
-		const newTile = TileFactory(targetType, x, y, this, terrain, this.growthRate);
-		this.replaceTile(x, y, newTile);
+	convertTileToCivic(tile){
+		const newTile = TileFactory('civic', tile.x, tile.y, this, tile.terrain, this.growthRate);
+		this.home.addTileToTerritory(newTile);
+		this.replaceTile(newTile.x, newTile.y, newTile);
 		return newTile;
 	}
 
 	//coords of old tile x, y + new tile
 	replaceTile(x, y, tile){
-		this.game.pleaseSortTiles = true;
 		const oldTile = this.rows[x].splice(y, 1, tile)[0];
 		if (oldTile.hasOwnProperty('ui')){
 			oldTile.ui.destroy();
@@ -51,7 +50,7 @@ export default class Grid{
 		tile.setTerrainSubtype();
 		tile.makeUI();
 		this.game.tileLayer.addChild(tile.ui.getContainer());
-		tile.render();			
+		tile.render();
 	}
 
 	update(turnNumber){
@@ -72,6 +71,6 @@ export default class Grid{
 			}	
 		}
 		TerrainGenerator.generateTerrain(this, this.homeStart);
-		this.home = new Home(this, this.game.startingResources, this.game.startingPopulation);			
+		this.home = new Home(this, this.game.settings);			
 	}
 }

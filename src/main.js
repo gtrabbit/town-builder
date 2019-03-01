@@ -20,12 +20,10 @@ function startup(resources){
 	if (isNewGame){
 		settings = makeSettings('medium');
 		state = {
-			width: 55,
-			growthRate: 5,
+			difficulty: settings.difficulty,
+			width: 55,			
 			height: 55,
-			startingResources: settings.startingResources,
-			startingPopulation: settings.startingPopulation
-		}
+		};
 		
 	} else {
 		//xhr to get the game state
@@ -55,7 +53,7 @@ function startup(resources){
 	
 
 
-	const thisGame = new Game(state, screenWidth, screenHeight, stage, renderer, animationHook)
+	const thisGame = new Game(state, settings, stage, renderer, animationHook)
 
 	thisGame.setStage();
 	thisGame.update(); //this increments by one day at the beginning, which I might not want to do. Was necessary at some point, but should look into going without it.

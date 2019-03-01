@@ -42,8 +42,7 @@ export default class TileSpriteWrapper {
     }
 
     setTintForTileByCurrentThreat(currentThreat) {
-        const alphaValue = 1 / Math.max((32 - Math.max(currentThreat, 0)), 1);
-
+        const alphaValue = 1 / Math.max((16 - Math.max(currentThreat, 0)), 1);
         if (alphaValue > 0.1) {
             if (!this.dangerIndicator) {
                 this.dangerIndicator = textureLegend('glass-circle');

@@ -23,7 +23,7 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 		}
 
 		getCurrentThreat() {
-			return Math.max(this.threatLevel - this.getDefense());
+			return Math.max(this.threatLevel - this.getDefense(), 0);
 		}
 
 		build(building){
@@ -61,10 +61,14 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 			const formerBuilding = this.building;
 			this.ongoingConstruction = false;
 			this.building = building;
+			this.setSecondaryTerrainSubtype('field');
+			this.setTerrainSubtypeName('field');
+			this.setTerrainNoValidation('field', 'field');
 			return formerBuilding;
 		}
 
 		showOptions(){
+			console.log(this);
 			if (this.ongoingConstruction) {
 				console.log("show an ongoing construction window");
 			} else if (!this.building) {
@@ -95,9 +99,11 @@ import makeBuildingUIWindow from '../home/buildings/common/begin-construction-ui
 					tile.markAsExplored();
 					this.isOnEdgeOfTown = true;
 				}
-			})
-			this.ui.illumine(true);
-			this.ui.setTintForTileByCurrentThreat(this.getCurrentThreat());
+			});
+			if (this.ui) {
+				this.ui.illumine(true);
+				this.ui.setTintForTileByCurrentThreat(this.getCurrentThreat());
+			}
 		}
 	}
 
